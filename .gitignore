@@ -1,1 +1,19 @@
-Dataset/
+# Dataset
+data/external/
+
+# Virtual Environment
+venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# Model Files
+*.pkl
+*.joblib
+
+# Environment Variables
+.env
