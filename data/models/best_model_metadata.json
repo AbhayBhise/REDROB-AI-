@@ -1,5 +1,5 @@
 {
-  "model_name": "Elastic Net",
+  "model_name": "Ridge Regression",
   "artifact": "best_model_bundle.joblib",
   "selected_features": [
     "years_of_experience",
@@ -34,16 +34,28 @@
     "linkedin_connected",
     "github_active"
   ],
-  "trained_on": "train+val",
-  "validation_metrics": {
-    "r2": 0.838,
-    "mae": 2.425,
-    "rmse": 2.918
+  "trained_on": "80% training split after 5-fold CV selection",
+  "cv_metrics": {
+    "model": "Ridge Regression",
+    "mean_train_r2": 0.926,
+    "mean_cv_r2": 0.926,
+    "std_cv_r2": 0.001,
+    "mean_train_rmse": 1.803,
+    "mean_cv_rmse": 1.804,
+    "std_cv_rmse": 0.004,
+    "mean_train_mae": 1.463,
+    "mean_cv_mae": 1.464,
+    "std_cv_mae": 0.003
+  },
+  "train_metrics": {
+    "r2": 0.926,
+    "mae": 1.463,
+    "rmse": 1.803
   },
   "test_metrics": {
-    "r2": 0.868,
-    "mae": 3.499,
-    "rmse": 4.028
+    "r2": 0.926,
+    "mae": 1.464,
+    "rmse": 1.808
   },
   "saved_at": "2026-06-22 00:00:00"
 }

@@ -2,14 +2,15 @@
 ═══════════════════════════════════════════════════════════════════════════════
 INDIA RUNS HACKATHON — TRACK 1 DATA & AI CHALLENGE
 Complete End-to-End Pipeline: EDA → Encoding → Feature Engineering → 
-Correlation Analysis → Train/Test Split → Model Training & Evaluation
+Correlation Analysis → 80/20 Train/Test Split → 5-Fold CV → Model Training & Evaluation
 ═══════════════════════════════════════════════════════════════════════════════
 
 Team: 4 people (P1: Data Eng, P2: ML/NLP, P3: LLM/RAG, P4: Backend)
-Dataset: sample_candidates.json (50 records) or candidates.jsonl (full)
+Dataset: candidates.jsonl (full) or sample_candidates.json fallback
 Output: 
   - features_final.csv (all candidates with 80+ features, 0 nulls)
-  - train.csv, val.csv, test.csv (70/15/15 split)
+  - train.csv, test.csv (80/20 split)
+  - cv_results.csv (5-fold CV on training split)
   - 10 visualization PNG files
   - Model predictions + performance metrics
 
@@ -35,10 +36,11 @@ import seaborn as sns
 
 # ML
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler, StandardScaler
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, KFold, cross_validate
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.linear_model import LinearRegression, Ridge, ElasticNet
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
+from sklearn.pipeline import Pipeline
 
 # Stats
 from scipy.stats import spearmanr, pearsonr
@@ -59,6 +61,21 @@ MODELS_DIR = ROOT_DIR / "data" / "models"
 PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 PLOTS_DIR.mkdir(parents=True, exist_ok=True)
 MODELS_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def load_candidates(data_dir: Path):
+    full_path = data_dir / "candidates.jsonl"
+    sample_path = data_dir / "sample_candidates.json"
+    if full_path.exists():
+        candidates = []
+        with open(full_path, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    candidates.append(json.loads(line))
+        return candidates, full_path
+    with open(sample_path, encoding="utf-8") as f:
+        return json.load(f), sample_path
 
 # Plotting style (dark mode)
 plt.style.use('dark_background')
@@ -91,10 +108,8 @@ print("="*80)
 print("SECTION 1: LOADING & FLATTENING DATA")
 print("="*80)
 
-with open(DATA_DIR / "sample_candidates.json") as f:
-    raw_candidates = json.load(f)
-
-print(f"✓ Loaded {len(raw_candidates)} candidate records")
+raw_candidates, source_path = load_candidates(DATA_DIR)
+print(f"✓ Loaded {len(raw_candidates)} candidate records from {source_path.name}")
 
 records = []
 for candidate in raw_candidates:
@@ -190,16 +205,16 @@ df["days_on_platform"] = (TODAY - df["signup_date"]).dt.days
 # Handle sentinel -1 values (platform encoding for "not available")
 print("\n✓ SENTINEL VALUE HANDLING:")
 github_sentinel = (df["github_activity_score"] == -1).sum()
-print(f"  - github_activity_score = -1: {github_sentinel}/50 (no GitHub account linked)")
+print(f"  - github_activity_score = -1: {github_sentinel}/{len(df)} (no GitHub account linked)")
 df["github_activity_score"] = df["github_activity_score"].clip(lower=0)
 
 offer_sentinel = (df["offer_acceptance_rate"] == -1).sum()
-print(f"  - offer_acceptance_rate = -1: {offer_sentinel}/50 (never received offer)")
+print(f"  - offer_acceptance_rate = -1: {offer_sentinel}/{len(df)} (never received offer)")
 df["offer_acceptance_rate"] = df["offer_acceptance_rate"].clip(lower=0)
 
 # Handle null assessment scores
 assess_nulls = df["avg_assessment_score"].isna().sum()
-print(f"  - avg_assessment_score = null: {assess_nulls}/50 (no assessments taken)")
+print(f"  - avg_assessment_score = null: {assess_nulls}/{len(df)} (no assessments taken)")
 df["avg_assessment_score"] = df["avg_assessment_score"].fillna(0)
 
 # Binary features: ensure 0/1 type
@@ -396,10 +411,10 @@ for i, (feat, row) in enumerate(corr_df.tail(5).iterrows(), 1):
     print(f"  {i:2d}. {feat:35s} r={row['r']:7.3f} p={row['p']:.3f} {row['sig']}")
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# SECTION 6: TRAIN / VAL / TEST SPLIT
+# SECTION 6: TRAIN / TEST SPLIT + 5-FOLD CV
 # ═══════════════════════════════════════════════════════════════════════════════
 print("\n" + "="*80)
-print("SECTION 6: TRAIN / VAL / TEST SPLIT")
+print("SECTION 6: TRAIN / TEST SPLIT + 5-FOLD CV")
 print("="*80)
 
 # Select features for modeling
@@ -421,112 +436,123 @@ TARGET = "master_score"
 X = df[SELECTED_FEATURES].fillna(0)
 y = df[TARGET]
 
-# Split: 70% train, 15% val, 15% test
-X_train_raw, X_temp_raw, y_train, y_temp = train_test_split(
-    X, y, test_size=0.30, random_state=42, shuffle=True
-)
-X_val_raw, X_test_raw, y_val, y_test = train_test_split(
-    X_temp_raw, y_temp, test_size=0.50, random_state=42, shuffle=True
+# Hold out 20% only once for unbiased final evaluation
+X_train_raw, X_test_raw, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=42, shuffle=True
 )
 
-print(f"\n✓ SPLIT RATIOS (70/15/15):")
-print(f"  Train: {len(X_train_raw):2d} candidates ({len(X_train_raw)/50*100:5.1f}%)")
-print(f"  Val:   {len(X_val_raw):2d} candidates ({len(X_val_raw)/50*100:5.1f}%)")
-print(f"  Test:  {len(X_test_raw):2d} candidates ({len(X_test_raw)/50*100:5.1f}%)")
-
-scaler = MinMaxScaler()
-X_train = pd.DataFrame(scaler.fit_transform(X_train_raw), columns=SELECTED_FEATURES, index=X_train_raw.index)
-X_val = pd.DataFrame(scaler.transform(X_val_raw), columns=SELECTED_FEATURES, index=X_val_raw.index)
-X_test = pd.DataFrame(scaler.transform(X_test_raw), columns=SELECTED_FEATURES, index=X_test_raw.index)
-
-print(f"\n✓ FEATURE SCALING: MinMaxScaler fit on train only [0,1]")
-print(f"  {len(SELECTED_FEATURES)} features selected for modeling")
+print(f"\n✓ SPLIT RATIOS (80/20):")
+print(f"  Train: {len(X_train_raw):2d} candidates ({len(X_train_raw)/len(df)*100:5.1f}%)")
+print(f"  Test:  {len(X_test_raw):2d} candidates ({len(X_test_raw)/len(df)*100:5.1f}%)")
+print(f"\n✓ FEATURES SELECTED: {len(SELECTED_FEATURES)}")
 
 # Save split assignments back to df
 split_assignment = pd.Series("", index=df.index)
-split_assignment.iloc[X_train.index] = "train"
-split_assignment.iloc[X_val.index] = "val"
-split_assignment.iloc[X_test.index] = "test"
+split_assignment.loc[X_train_raw.index] = "train"
+split_assignment.loc[X_test_raw.index] = "test"
 df["split"] = split_assignment
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# SECTION 7: MODEL TRAINING & EVALUATION
-# ═══════════════════════════════════════════════════════════════════════════════
-print("\n" + "="*80)
-print("SECTION 7: MODEL TRAINING & EVALUATION")
-print("="*80)
+# 5-fold CV on the training split only
+cv = KFold(n_splits=5, shuffle=True, random_state=42)
 
-models = {
-    "Linear Regression": LinearRegression(),
-    "Ridge Regression": Ridge(alpha=0.1, random_state=42),
-    "Elastic Net": ElasticNet(alpha=0.1, l1_ratio=0.2, random_state=42, max_iter=10000),
-    "Gradient Boosting": GradientBoostingRegressor(n_estimators=100, random_state=42, max_depth=3, learning_rate=0.1),
+model_specs = {
+    "Ridge Regression": Pipeline([
+        ("scaler", StandardScaler()),
+        ("model", Ridge(alpha=1.0, random_state=42)),
+    ]),
+    "Elastic Net": Pipeline([
+        ("scaler", StandardScaler()),
+        ("model", ElasticNet(alpha=0.1, l1_ratio=0.2, random_state=42, max_iter=10000)),
+    ]),
+    "Random Forest": Pipeline([
+        ("model", RandomForestRegressor(
+            n_estimators=300, random_state=42, max_depth=6, min_samples_leaf=2, n_jobs=-1
+        )),
+    ]),
 }
 
-results = {}
-for model_name, model in models.items():
-    print(f"\n✓ Training {model_name}...")
-    model.fit(X_train, y_train)
-    
-    for split_name, X_split, y_split in [
-        ("train", X_train, y_train),
-        ("val", X_val, y_val),
-        ("test", X_test, y_test)
-    ]:
-        y_pred = model.predict(X_split)
-        r2 = r2_score(y_split, y_pred)
-        mae = mean_absolute_error(y_split, y_pred)
-        rmse = np.sqrt(mean_squared_error(y_split, y_pred))
-        
-        results[f"{model_name}_{split_name}"] = {
-            "r2": round(r2, 3),
-            "mae": round(mae, 3),
-            "rmse": round(rmse, 3),
-            "predictions": y_pred,
-            "actual": y_split.values,
-            "model": model
-        }
-    
-    print(f"  Train R²={results[f'{model_name}_train']['r2']}  Val R²={results[f'{model_name}_val']['r2']}  Test R²={results[f'{model_name}_test']['r2']}")
+scoring = {
+    "r2": "r2",
+    "rmse": "neg_root_mean_squared_error",
+    "mae": "neg_mean_absolute_error",
+}
 
-# Print full results table
-print("\n" + "="*80)
-print("MODEL PERFORMANCE SUMMARY")
+cv_fold_records = []
+cv_summary_records = []
+
+print("\n✓ 5-FOLD CROSS-VALIDATION ON TRAINING SPLIT")
+for model_name, estimator in model_specs.items():
+    cv_scores = cross_validate(
+        estimator,
+        X_train_raw,
+        y_train,
+        cv=cv,
+        scoring=scoring,
+        return_train_score=True,
+        n_jobs=-1,
+    )
+
+    fold_count = len(cv_scores["test_r2"])
+    for fold_idx in range(fold_count):
+        cv_fold_records.append({
+            "model": model_name,
+            "fold": fold_idx + 1,
+            "train_r2": round(cv_scores["train_r2"][fold_idx], 3),
+            "cv_r2": round(cv_scores["test_r2"][fold_idx], 3),
+            "train_rmse": round(-cv_scores["train_rmse"][fold_idx], 3),
+            "cv_rmse": round(-cv_scores["test_rmse"][fold_idx], 3),
+            "train_mae": round(-cv_scores["train_mae"][fold_idx], 3),
+            "cv_mae": round(-cv_scores["test_mae"][fold_idx], 3),
+        })
+
+    cv_summary_records.append({
+        "model": model_name,
+        "mean_train_r2": round(cv_scores["train_r2"].mean(), 3),
+        "mean_cv_r2": round(cv_scores["test_r2"].mean(), 3),
+        "std_cv_r2": round(cv_scores["test_r2"].std(), 3),
+        "mean_train_rmse": round((-cv_scores["train_rmse"]).mean(), 3),
+        "mean_cv_rmse": round((-cv_scores["test_rmse"]).mean(), 3),
+        "std_cv_rmse": round((-cv_scores["test_rmse"]).std(), 3),
+        "mean_train_mae": round((-cv_scores["train_mae"]).mean(), 3),
+        "mean_cv_mae": round((-cv_scores["test_mae"]).mean(), 3),
+        "std_cv_mae": round((-cv_scores["test_mae"]).std(), 3),
+    })
+
+cv_results_df = pd.DataFrame(cv_summary_records).sort_values(
+    ["mean_cv_r2", "mean_cv_rmse"], ascending=[False, True]
+).reset_index(drop=True)
+cv_folds_df = pd.DataFrame(cv_fold_records)
+
+print("\nMODEL PERFORMANCE SUMMARY (5-FOLD CV)")
 print("="*80)
-print("\n{:<25} {:<15} {:<15} {:<15}".format("Model", "Train R²", "Val R²", "Test R²"))
-print("-"*70)
-for model_name in models.keys():
-    train_r2 = results[f"{model_name}_train"]["r2"]
-    val_r2 = results[f"{model_name}_val"]["r2"]
-    test_r2 = results[f"{model_name}_test"]["r2"]
-    print(f"{model_name:<25} {train_r2:<15.3f} {val_r2:<15.3f} {test_r2:<15.3f}")
+print(cv_results_df.to_string(index=False))
 
-print("\n{:<25} {:<15} {:<15} {:<15}".format("Model", "Train MAE", "Val MAE", "Test MAE"))
-print("-"*70)
-for model_name in models.keys():
-    train_mae = results[f"{model_name}_train"]["mae"]
-    val_mae = results[f"{model_name}_val"]["mae"]
-    test_mae = results[f"{model_name}_test"]["mae"]
-    print(f"{model_name:<25} {train_mae:<15.3f} {val_mae:<15.3f} {test_mae:<15.3f}")
+best_model_name = cv_results_df.iloc[0]["model"]
+best_pipeline = clone(model_specs[best_model_name])
+best_pipeline.fit(X_train_raw, y_train)
+cv_best_metrics = {
+    key: (value.item() if hasattr(value, "item") else value)
+    for key, value in cv_results_df.iloc[0].to_dict().items()
+}
 
-# Get best model using validation performance, not the test set
-best_model_name = max(
-    models.keys(),
-    key=lambda m: (results[f"{m}_val"]["r2"], -results[f"{m}_val"]["mae"])
-)
-best_model = results[f"{best_model_name}_test"]["model"]
+train_predictions = best_pipeline.predict(X_train_raw)
+test_predictions = best_pipeline.predict(X_test_raw)
+
+train_metrics = {
+    "r2": round(r2_score(y_train, train_predictions), 3),
+    "mae": round(mean_absolute_error(y_train, train_predictions), 3),
+    "rmse": round(np.sqrt(mean_squared_error(y_train, train_predictions)), 3),
+}
+test_metrics = {
+    "r2": round(r2_score(y_test, test_predictions), 3),
+    "mae": round(mean_absolute_error(y_test, test_predictions), 3),
+    "rmse": round(np.sqrt(mean_squared_error(y_test, test_predictions)), 3),
+}
+
 print(f"\n★ BEST MODEL: {best_model_name}")
-print(f"  Selected on validation R² = {results[f'{best_model_name}_val']['r2']}")
-print(f"  Test R² = {results[f'{best_model_name}_test']['r2']}")
-print(f"  Test MAE = {results[f'{best_model_name}_test']['mae']}")
-
-# Refit a final deployment bundle on train + validation data.
-X_trainval_raw = pd.concat([X_train_raw, X_val_raw], axis=0).sort_index()
-y_trainval = pd.concat([y_train, y_val], axis=0).sort_index()
-final_scaler = MinMaxScaler()
-X_trainval = final_scaler.fit_transform(X_trainval_raw)
-final_model = clone(models[best_model_name])
-final_model.fit(X_trainval, y_trainval)
+print(f"  CV R² = {cv_results_df.iloc[0]['mean_cv_r2']}")
+print(f"  Test R² = {test_metrics['r2']}")
+print(f"  Test MAE = {test_metrics['mae']}")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # SECTION 8: SAVE OUTPUTS
@@ -541,16 +567,16 @@ print(f"✓ Saved: features_final.csv ({df.shape[0]}x{df.shape[1]})")
 
 # Save splits
 train_df = df[df["split"] == "train"].copy()
-val_df = df[df["split"] == "val"].copy()
 test_df = df[df["split"] == "test"].copy()
 
 train_df.to_csv(PROCESSED_DIR / "train.csv", index=False)
-val_df.to_csv(PROCESSED_DIR / "val.csv", index=False)
 test_df.to_csv(PROCESSED_DIR / "test.csv", index=False)
 
 print(f"✓ Saved: train.csv ({len(train_df)} records)")
-print(f"✓ Saved: val.csv ({len(val_df)} records)")
 print(f"✓ Saved: test.csv ({len(test_df)} records)")
+cv_results_df.to_csv(PROCESSED_DIR / "cv_results.csv", index=False)
+cv_folds_df.to_csv(PROCESSED_DIR / "cv_fold_metrics.csv", index=False)
+print("✓ Saved: cv_results.csv and cv_fold_metrics.csv")
 
 # Save model predictions
 predictions_df = pd.DataFrame({
@@ -562,11 +588,10 @@ predictions_df = pd.DataFrame({
 })
 
 for split, X_split, indices in [
-    ("train", X_train, X_train.index),
-    ("val", X_val, X_val.index),
-    ("test", X_test, X_test.index)
+    ("train", X_train_raw, X_train_raw.index),
+    ("test", X_test_raw, X_test_raw.index)
 ]:
-    preds = best_model.predict(X_split)
+    preds = best_pipeline.predict(X_split)
     predictions_df.loc[indices, "predicted_master_score"] = preds
     predictions_df.loc[indices, "prediction_error"] = preds - df.loc[indices, "master_score"].values
 
@@ -574,13 +599,14 @@ predictions_df.to_csv(PROCESSED_DIR / "model_predictions.csv", index=False)
 print(f"✓ Saved: model_predictions.csv (all predictions + errors)")
 
 # Save feature importance
-if hasattr(best_model, "feature_importances_"):
+model_step = best_pipeline.named_steps["model"]
+if hasattr(model_step, "feature_importances_"):
     feature_importance = pd.DataFrame({
         "feature": SELECTED_FEATURES,
-        "importance": best_model.feature_importances_
+        "importance": model_step.feature_importances_
     }).sort_values("importance", ascending=False)
-elif hasattr(best_model, "coef_"):
-    coefficients = np.asarray(best_model.coef_).ravel()
+elif hasattr(model_step, "coef_"):
+    coefficients = np.asarray(model_step.coef_).ravel()
     feature_importance = pd.DataFrame({
         "feature": SELECTED_FEATURES,
         "importance": np.abs(coefficients),
@@ -596,21 +622,13 @@ if feature_importance is not None:
 # Save reusable model artifact bundle
 model_bundle = {
     "model_name": best_model_name,
-    "model": final_model,
-    "scaler": final_scaler,
+    "pipeline": best_pipeline,
     "selected_features": SELECTED_FEATURES,
     "target": TARGET,
-    "trained_on": "train+val",
-    "validation_metrics": {
-        "r2": results[f"{best_model_name}_val"]["r2"],
-        "mae": results[f"{best_model_name}_val"]["mae"],
-        "rmse": results[f"{best_model_name}_val"]["rmse"],
-    },
-    "test_metrics": {
-        "r2": results[f"{best_model_name}_test"]["r2"],
-        "mae": results[f"{best_model_name}_test"]["mae"],
-        "rmse": results[f"{best_model_name}_test"]["rmse"],
-    },
+    "trained_on": "80% training split after 5-fold CV selection",
+    "cv_metrics": cv_best_metrics,
+    "train_metrics": train_metrics,
+    "test_metrics": test_metrics,
 }
 joblib.dump(model_bundle, MODELS_DIR / "best_model_bundle.joblib")
 with open(MODELS_DIR / "best_model_metadata.json", "w") as f:
@@ -618,9 +636,10 @@ with open(MODELS_DIR / "best_model_metadata.json", "w") as f:
         "model_name": best_model_name,
         "artifact": "best_model_bundle.joblib",
         "selected_features": SELECTED_FEATURES,
-        "trained_on": "train+val",
-        "validation_metrics": model_bundle["validation_metrics"],
-        "test_metrics": model_bundle["test_metrics"],
+        "trained_on": "80% training split after 5-fold CV selection",
+        "cv_metrics": cv_best_metrics,
+        "train_metrics": train_metrics,
+        "test_metrics": test_metrics,
         "saved_at": str(TODAY),
     }, f, indent=2)
 print(f"✓ Saved: best_model_bundle.joblib and best_model_metadata.json")
@@ -630,12 +649,14 @@ summary = {
     "total_records": len(df),
     "total_features": len(SELECTED_FEATURES),
     "train_size": len(train_df),
-    "val_size": len(val_df),
     "test_size": len(test_df),
     "best_model": best_model_name,
-    "best_test_r2": results[f"{best_model_name}_test"]["r2"],
-    "best_test_mae": results[f"{best_model_name}_test"]["mae"],
+    "best_cv_r2": float(cv_results_df.iloc[0]["mean_cv_r2"]),
+    "best_cv_rmse": float(cv_results_df.iloc[0]["mean_cv_rmse"]),
+    "best_test_r2": test_metrics["r2"],
+    "best_test_mae": test_metrics["mae"],
     "best_model_artifact": str(MODELS_DIR / "best_model_bundle.joblib"),
+    "cv_folds": 5,
     "timestamp": str(TODAY)
 }
 with open(PROCESSED_DIR / "summary.json", "w") as f:
@@ -648,7 +669,8 @@ print("="*80)
 print(f"\nAll outputs saved to: {PROCESSED_DIR}/")
 print("\nGenerated files:")
 print("  - features_final.csv        (all records with 80+ features)")
-print("  - train.csv, val.csv, test.csv  (split data)")
+print("  - train.csv, test.csv       (80/20 split)")
+print("  - cv_results.csv, cv_fold_metrics.csv  (5-fold CV)")
 print("  - model_predictions.csv     (predictions vs actual)")
 print("  - feature_importance.csv    (feature ranking)")
 print("  - summary.json              (pipeline metadata)")

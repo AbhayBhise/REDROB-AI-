@@ -1,12 +1,14 @@
 {
-  "total_records": 50,
+  "total_records": 100000,
   "total_features": 31,
-  "train_size": 35,
-  "val_size": 7,
-  "test_size": 8,
-  "best_model": "Elastic Net",
-  "best_test_r2": 0.868,
-  "best_test_mae": 3.499,
+  "train_size": 80000,
+  "test_size": 20000,
+  "best_model": "Ridge Regression",
+  "best_cv_r2": 0.926,
+  "best_cv_rmse": 1.804,
+  "best_test_r2": 0.926,
+  "best_test_mae": 1.464,
   "best_model_artifact": "C:\\Users\\Disha Satpute\\Downloads\\redrob-ai\\data\\models\\best_model_bundle.joblib",
+  "cv_folds": 5,
   "timestamp": "2026-06-22 00:00:00"
 }

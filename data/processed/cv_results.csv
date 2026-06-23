@@ -1,0 +1,4 @@
+model,mean_train_r2,mean_cv_r2,std_cv_r2,mean_train_rmse,mean_cv_rmse,std_cv_rmse,mean_train_mae,mean_cv_mae,std_cv_mae
+Ridge Regression,0.926,0.926,0.001,1.803,1.804,0.004,1.463,1.464,0.003
+Elastic Net,0.922,0.922,0.001,1.847,1.848,0.005,1.499,1.499,0.004
+Random Forest,0.72,0.712,0.004,3.496,3.55,0.015,2.783,2.823,0.016
