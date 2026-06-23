@@ -37,8 +37,7 @@ graph TD
     subgraph Offline Stage [Stage 1: Offline Embedding Generation - precompute.py]
         A[candidates.jsonl <br> 100K Profiles] -->|Extract career text| B(build_candidate_text)
         B -->|Batch encode| C[BAAI/bge-small-en-v1.5]
-        C -->|384-dim Vectors| D(FP32 Embeddings)
-        D -->|Cast to FP16| E[data/candidates_embeddings.npy <br> 73.2 MB]
+        C -->|Precomputed Embeddings| E[data/candidates_embeddings.npy]
         A -->|Extract IDs| F[data/candidate_ids_ordered.json]
     end
 
@@ -52,12 +51,12 @@ graph TD
         A -->|Index Text with repeats| J
         J -->|Lexical Match| K(BM25 Score)
         
-        A -->|Feature Scanners| L[9-Component MasterScore Engine]
+        A -->|Feature Scanners| L[MasterScore Feature Engine]
         L -->|Raw Master Score| M(MasterScore)
         
-        I -->|Semantic Score: 0.40| N{Hybrid Score Fusion}
-        K -->|Lexical Score: 0.25| N
-        M -->|Heuristic Score: 0.35| N
+        I -->|Semantic Score| N{Multi-Signal Fusion}
+        K -->|Lexical Score| N
+        M -->|MasterScore| N
         
         N -->|Composite Score| O[Honeypot Filter & Consulting Penalty]
         O -->|Sorted List| P[Tie-Breaker: Candidate ID Ascending]
@@ -70,12 +69,16 @@ graph TD
     
     class Offline Stage,Online Stage stage;
     class A,E,F,Q file;
-    class B,C,D,H,I,J,L,N,O,P process;
+    class B,C,E,H,I,J,L,N,O,P process;
 ```
 
 ---
 
 ## 4. Overall Pipeline & Workflow
+
+The ranking pipeline consists of a two-stage hybrid process:
+1. **Offline Precomputation (`precompute.py`)**: Runs once. It generates L2-normalized 384-dimensional dense embeddings for all 100,000 candidates using the `BAAI/bge-small-en-v1.5` model. To keep the repository size under GitHub limits without requiring Git LFS, the embedding matrix is cast to `float16` and saved as `data/candidates_embeddings.npy` (73.2 MB).
+2. **Online Ranking (`rank.py`)**: Runs on demand. It loads the precomputed embeddings, generates the embedding for the Job Description, runs BM25 lexical search, computes an engineered `MasterScore` for each candidate, and fuses these signals into a single score. It outputs the top 100 candidates sorted by score (descending) and breaks ties deterministically using candidate IDs (ascending).
 
 Every candidate is evaluated through a structured feature scanning workflow that calculates role fit, platform availability, and filters out synthetic outliers or non-product consulting backgrounds:
 
@@ -85,44 +88,35 @@ graph TD
     B -->|Yes: Impossible Durations| C[Set Score to 0.001]
     B -->|No| D[Compute Base Scorer Components]
     
-    subgraph Master Score Sub-Engine
-        D --> D1[Skill Match: 25% <br> Expert 2.0x, Adv 1.5x, Endorsements]
-        D --> D2[Experience Band: 16% <br> Preferred 5-9y = 1.0, Out of Band Penalty]
-        D --> D3[Production Evidence: 16% <br> Deployed/Platform vs Academic/PhD]
-        D --> D4[Behavioral Score: 13% <br> Freshness, Open-to-work, Response times]
-        D --> D5[Title Relevance: 11% <br> AI/ML Engineer 1.0, Backend 0.65]
-        D --> D6[Location Fit: 8% <br> Pune/Noida/Bangalore Hybrid Match]
-        D --> D7[Education Tier: 5% <br> Tier-1 Prestige University Match]
-        D --> D8[Certifications: 4% <br> JD-Relevant AWS/ML specialized certs]
-        D --> D9[Notice Period: 2% <br> Sorter for sub-30 day availability]
+    subgraph MasterScore Feature Engine
+        D --> D1[Skill Match Scorer <br> Proficiency & Endorsements]
+        D --> D2[Experience Band Scorer <br> Seniority & Band Fit]
+        D --> D3[Production Evidence Scorer <br> Deployed vs Research Scan]
+        D --> D4[Behavioral Scorer <br> Engagement & Freshness]
+        D --> D5[Title Relevance Scorer <br> Current Role Fit]
+        D --> D6[Location Fit Scorer <br> Location & Relocation]
+        D --> D7[Education Tier Scorer <br> Prestige Tier Match]
+        D --> D8[Certifications Scorer <br> Relevant ML/Cloud Certs]
+        D --> D9[Notice Period Scorer <br> Early Availability Match]
     end
 
-    D1 & D2 & D3 & D4 & D5 & D6 & D7 & D8 & D9 --> E[Sum Weighted Components <br> Sum = 1.00]
+    D1 & D2 & D3 & D4 & D5 & D6 & D7 & D8 & D9 --> E[Weighted Multi-Signal Fusion]
     
     E --> F{Has Verified Assessments?}
-    F -->|Yes| G[Apply Multiplier: <br> 0.85 + assessment_score * 0.30]
+    F -->|Yes| G[Apply Platform Multiplier]
     F -->|No| H[Keep Base Score]
     
     G & H --> I{Consulting-Only Career?}
-    I -->|Yes: TCS/Infosys/Accenture/etc.| J[Apply -0.15 Penalty]
+    I -->|Yes: TCS/Infosys/Accenture/etc.| J[Apply Consulting Penalty]
     I -->|No| K[Keep Score]
     
     J & K --> L[Final MasterScore]
     
     L --> M{Fusion Stage}
-    M --> N[Combine with BGE Cosine Similarity 40% & BM25 Score 25%]
+    M --> N[Fuse: Semantic + Lexical + MasterScore]
     N --> O[Deterministic Tie-Break: Candidate ID Ascending]
     O --> P[End: Ranked Candidate Row]
 ```
-
-
----
-
-## 4. Overall Pipeline
-
-The ranking pipeline consists of a two-stage hybrid process:
-1. **Offline Precomputation (`precompute.py`)**: Runs once. It generates L2-normalized 384-dimensional dense embeddings for all 100,000 candidates using the `BAAI/bge-small-en-v1.5` model. To keep the repository size under GitHub limits without requiring Git LFS, the embedding matrix is cast to `float16` and saved as `data/candidates_embeddings.npy` (73.2 MB).
-2. **Online Ranking (`rank.py`)**: Runs on demand. It loads the precomputed embeddings, generates the embedding for the Job Description, runs BM25 lexical search, computes a 9-signal engineered `MasterScore` for each candidate, and fuses these signals into a single score. It outputs the top 100 candidates sorted by score (descending) and breaks ties deterministically using candidate IDs (ascending).
 
 ---
 
