@@ -35,7 +35,7 @@ import seaborn as sns
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, Ridge, ElasticNet
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 
 # Stats
@@ -453,7 +453,8 @@ print("="*80)
 
 models = {
     "Linear Regression": LinearRegression(),
-    "Random Forest": RandomForestRegressor(n_estimators=100, random_state=42, max_depth=5),
+    "Ridge Regression": Ridge(alpha=0.1, random_state=42),
+    "Elastic Net": ElasticNet(alpha=0.1, l1_ratio=0.2, random_state=42, max_iter=10000),
     "Gradient Boosting": GradientBoostingRegressor(n_estimators=100, random_state=42, max_depth=3, learning_rate=0.1),
 }
 
@@ -503,13 +504,14 @@ for model_name in models.keys():
     test_mae = results[f"{model_name}_test"]["mae"]
     print(f"{model_name:<25} {train_mae:<15.3f} {val_mae:<15.3f} {test_mae:<15.3f}")
 
-# Get best model
+# Get best model using validation performance, not the test set
 best_model_name = max(
-    ["Random Forest", "Gradient Boosting"],
-    key=lambda m: results[f"{m}_test"]["r2"]
+    models.keys(),
+    key=lambda m: (results[f"{m}_val"]["r2"], -results[f"{m}_val"]["mae"])
 )
 best_model = results[f"{best_model_name}_test"]["model"]
 print(f"\n★ BEST MODEL: {best_model_name}")
+print(f"  Selected on validation R² = {results[f'{best_model_name}_val']['r2']}")
 print(f"  Test R² = {results[f'{best_model_name}_test']['r2']}")
 print(f"  Test MAE = {results[f'{best_model_name}_test']['mae']}")
 
@@ -564,6 +566,17 @@ if hasattr(best_model, "feature_importances_"):
         "feature": SELECTED_FEATURES,
         "importance": best_model.feature_importances_
     }).sort_values("importance", ascending=False)
+elif hasattr(best_model, "coef_"):
+    coefficients = np.asarray(best_model.coef_).ravel()
+    feature_importance = pd.DataFrame({
+        "feature": SELECTED_FEATURES,
+        "importance": np.abs(coefficients),
+        "coefficient": coefficients
+    }).sort_values("importance", ascending=False)
+else:
+    feature_importance = None
+
+if feature_importance is not None:
     feature_importance.to_csv(PROCESSED_DIR / "feature_importance.csv", index=False)
     print(f"✓ Saved: feature_importance.csv (from {best_model_name})")
 

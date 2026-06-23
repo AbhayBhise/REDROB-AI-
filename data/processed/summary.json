@@ -4,8 +4,8 @@
   "train_size": 35,
   "val_size": 7,
   "test_size": 8,
-  "best_model": "Gradient Boosting",
-  "best_test_r2": 0.743,
-  "best_test_mae": 3.467,
+  "best_model": "Ridge Regression",
+  "best_test_r2": 0.965,
+  "best_test_mae": 1.708,
   "timestamp": "2026-06-22 00:00:00"
 }
