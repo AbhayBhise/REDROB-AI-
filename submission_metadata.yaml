@@ -1,0 +1,80 @@
+# Redrob Hackathon — Submission Metadata
+# Track 1: Intelligent Candidate Discovery & Ranking
+
+# ============================================================================
+# Team identity — FILL IN YOUR DETAILS
+# ============================================================================
+team_name: "YOUR-TEAM-NAME"   # <-- Fill this in
+
+primary_contact:
+  name: "YOUR NAME"           # <-- Fill this in
+  email: "YOUR@EMAIL.COM"     # <-- Fill this in
+  phone: "+91-XXXXXXXXXX"     # <-- Fill this in
+
+team_members:
+  - name: "YOUR NAME"         # <-- Fill this in
+    email: "YOUR@EMAIL.COM"   # <-- Fill this in
+    role: "ML Engineer"
+
+# ============================================================================
+# Code and reproducibility
+# ============================================================================
+github_repo: "https://github.com/YOUR_USERNAME/YOUR_REPO"   # <-- Fill this in
+
+sandbox_link: "https://YOUR-APP.streamlit.app"              # <-- Fill after Streamlit deploy
+
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
+
+# ============================================================================
+# Compute environment
+# ============================================================================
+compute:
+  platform: "Windows 11, Intel Core (12 cores)"
+  cpu_cores: 12
+  ram_gb: 16
+  python_version: "3.10.11"
+  os: "Windows 11"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false
+  pre_computation_required: true
+  pre_computation_time_minutes: 90   # One-time offline embedding generation
+
+# ============================================================================
+# AI tools declaration
+# ============================================================================
+ai_tools_used:
+  - "Antigravity (Google DeepMind AI coding assistant)"
+
+ai_usage_summary: |
+  Used Antigravity AI assistant for code review, architectural guidance, and
+  debugging environment compatibility issues (NumPy/PyTorch version conflicts).
+  All ranking logic, feature engineering decisions, and scoring weights were
+  designed by the team. No candidate data was fed to any external LLM during
+  ranking — the pipeline is fully offline.
+
+# ============================================================================
+# Approach summary
+# ============================================================================
+methodology_summary: |
+  Two-stage hybrid ranking pipeline for 100K candidates against a Senior AI
+  Engineer JD. Stage 1 (offline): BAAI/bge-small-en-v1.5 generates 384-dim
+  embeddings for all candidates and saves to disk (~90 min, done once).
+  Stage 2 (ranking, ~37s): Loads precomputed embeddings, embeds the JD once,
+  computes BM25 over structured candidate text, runs a 9-component MasterScore
+  (skill match, experience band, production evidence, behavioral signals,
+  title relevance, location, education tier, certifications, notice period),
+  then fuses: 0.40 × Semantic + 0.25 × BM25 + 0.35 × Master. Key insight:
+  dense retrieval has low variance (std=0.026) across AI/ML profiles, so BM25
+  and engineered features do the fine-grained discrimination. Honeypot
+  detection flags 83 synthetic profiles. Consulting-only careers penalized
+  per JD explicit guidance. Output: Top 100, fully deterministic, validated.
+
+# ============================================================================
+# Declarations
+# ============================================================================
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true    # Detected 83 honeypots via skill-duration analysis
+  reproduction_tested: true

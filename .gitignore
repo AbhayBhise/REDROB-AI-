@@ -1,5 +1,6 @@
 # Dataset
 data/external/
+candidates.jsonl
 
 # Virtual Environment
 venv/
@@ -18,6 +19,10 @@ __pycache__/
 !data/models/*.pkl
 !data/models/*.joblib
 !data/models/*.json
+!archive/data/models/
+!archive/data/models/*.pkl
+!archive/data/models/*.joblib
+!archive/data/models/*.json
 
 # Environment Variables
 .env
