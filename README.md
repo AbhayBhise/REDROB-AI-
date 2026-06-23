@@ -29,55 +29,92 @@ Our pipeline is designed to overcome these challenges.
 
 ## 3. Architecture Diagram
 
+Our hybrid candidate retrieval and scoring architecture separates heavy neural network embeddings from rapid rank-time filtering and multi-signal feature fusion:
+
+```mermaid
+graph TD
+    %% Offline Precomputation Stage
+    subgraph Offline Stage [Stage 1: Offline Embedding Generation - precompute.py]
+        A[candidates.jsonl <br> 100K Profiles] -->|Extract career text| B(build_candidate_text)
+        B -->|Batch encode| C[BAAI/bge-small-en-v1.5]
+        C -->|384-dim Vectors| D(FP32 Embeddings)
+        D -->|Cast to FP16| E[data/candidates_embeddings.npy <br> 73.2 MB]
+        A -->|Extract IDs| F[data/candidate_ids_ordered.json]
+    end
+
+    %% Online Ranking Stage
+    subgraph Online Stage [Stage 2: Hybrid Scoring & Fusion - rank.py]
+        G[Job Description] -->|Live encode| H[BGE-Small-En Encoder]
+        H -->|JD Embedding| I[Cosine Similarity Engine]
+        E -->|Load vectors| I
+        
+        G -->|Tokenize| J[BM25 Indexer]
+        A -->|Index Text with repeats| J
+        J -->|Lexical Match| K(BM25 Score)
+        
+        A -->|Feature Scanners| L[9-Component MasterScore Engine]
+        L -->|Raw Master Score| M(MasterScore)
+        
+        I -->|Semantic Score: 0.40| N{Hybrid Score Fusion}
+        K -->|Lexical Score: 0.25| N
+        M -->|Heuristic Score: 0.35| N
+        
+        N -->|Composite Score| O[Honeypot Filter & Consulting Penalty]
+        O -->|Sorted List| P[Tie-Breaker: Candidate ID Ascending]
+        P -->|Top 100| Q[submission.csv]
+    end
+
+    classDef stage fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef file fill:#bbf,stroke:#333,stroke-width:1px;
+    classDef process fill:#dfd,stroke:#333,stroke-width:1px;
+    
+    class Offline Stage,Online Stage stage;
+    class A,E,F,Q file;
+    class B,C,D,H,I,J,L,N,O,P process;
 ```
-candidates.jsonl (100K raw records)
-        │
-        ▼
-┌────────────────────────────────────────┐
-│           OFFLINE STAGE                │  precompute.py — run once (~90 min)
-│                                        │
-│  1. Load BAAI/bge-small-en-v1.5        │
-│  2. Batch-embed all 100K candidates    │
-│  3. Cast embeddings to float16         │  (saves 50% storage space for Git push)
-└──────────────┬─────────────────────────┘
-               │
-               ▼
-   data/candidates_embeddings.npy  (73.2 MB)
-   data/candidate_ids_ordered.json (1.6 MB)
-               │
-               ▼
-┌────────────────────────────────────────┐
-│           RANKING STAGE                │  rank.py — ~37 seconds on CPU
-│                                        │
-│  1. Load precomputed embeddings (f16)  │
-│  2. Embed JD text once (live)          │
-│  3. Compute BM25 over all candidates   │
-│  4. Compute 9-component MasterScore    │
-│                                        │
-│     skill_score      (25% weight)      │
-│     experience_score (16% weight)      │
-│     production_score (16% weight)      │
-│     behavioral_score (13% weight)      │
-│     title_relevance  (11% weight)      │
-│     location_score   ( 8% weight)      │
-│     edu_tier_score   ( 5% weight)      │
-│     cert_score       ( 4% weight)      │
-│     notice_period    ( 2% weight)      │
-│                                        │
-│  5. Fuse Scores:                       │
-│     0.40 × Semantic Similarity         │
-│     0.25 × BM25                        │
-│     0.35 × MasterScore                 │
-│                                        │
-│  6. Filter Honeypots & Break Ties      │
-└──────────────┬─────────────────────────┘
-               │
-               ▼
-         Top-100 sorted
-               │
-               ▼
-         submission.csv
+
+---
+
+## 4. Overall Pipeline & Workflow
+
+Every candidate is evaluated through a structured feature scanning workflow that calculates role fit, platform availability, and filters out synthetic outliers or non-product consulting backgrounds:
+
+```mermaid
+graph TD
+    A[Start: Candidate Record] --> B{Honeypot Detector}
+    B -->|Yes: Impossible Durations| C[Set Score to 0.001]
+    B -->|No| D[Compute Base Scorer Components]
+    
+    subgraph Master Score Sub-Engine
+        D --> D1[Skill Match: 25% <br> Expert 2.0x, Adv 1.5x, Endorsements]
+        D --> D2[Experience Band: 16% <br> Preferred 5-9y = 1.0, Out of Band Penalty]
+        D --> D3[Production Evidence: 16% <br> Deployed/Platform vs Academic/PhD]
+        D --> D4[Behavioral Score: 13% <br> Freshness, Open-to-work, Response times]
+        D --> D5[Title Relevance: 11% <br> AI/ML Engineer 1.0, Backend 0.65]
+        D --> D6[Location Fit: 8% <br> Pune/Noida/Bangalore Hybrid Match]
+        D --> D7[Education Tier: 5% <br> Tier-1 Prestige University Match]
+        D --> D8[Certifications: 4% <br> JD-Relevant AWS/ML specialized certs]
+        D --> D9[Notice Period: 2% <br> Sorter for sub-30 day availability]
+    end
+
+    D1 & D2 & D3 & D4 & D5 & D6 & D7 & D8 & D9 --> E[Sum Weighted Components <br> Sum = 1.00]
+    
+    E --> F{Has Verified Assessments?}
+    F -->|Yes| G[Apply Multiplier: <br> 0.85 + assessment_score * 0.30]
+    F -->|No| H[Keep Base Score]
+    
+    G & H --> I{Consulting-Only Career?}
+    I -->|Yes: TCS/Infosys/Accenture/etc.| J[Apply -0.15 Penalty]
+    I -->|No| K[Keep Score]
+    
+    J & K --> L[Final MasterScore]
+    
+    L --> M{Fusion Stage}
+    M --> N[Combine with BGE Cosine Similarity 40% & BM25 Score 25%]
+    N --> O[Deterministic Tie-Break: Candidate ID Ascending]
+    O --> P[End: Ranked Candidate Row]
 ```
+
 
 ---
 
