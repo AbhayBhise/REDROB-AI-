@@ -6,6 +6,7 @@ Output: features_extracted.csv (one row per candidate, 31 features, 0 nulls)
 """
 
 import json
+import sys
 import pandas as pd
 import numpy as np
 from datetime import datetime
@@ -14,6 +15,12 @@ from pathlib import Path
 # ── CONFIG ────────────────────────────────────────────────────────────────────
 DATA_DIR   = Path("./Dataset/[PUB] India_runs_data_and_ai_challenge/[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/")           # folder containing the dataset files
 TODAY      = datetime(2026, 6, 22)
+ROOT_DIR   = Path(__file__).resolve().parents[2]
+PROCESSED_DIR = ROOT_DIR / "data" / "processed"
+PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 
 # ── STEP 1: LOAD ──────────────────────────────────────────────────────────────
 # For sample_candidates.json (50 records, used here for EDA):
@@ -232,8 +239,8 @@ scores = ["activity_score","profile_quality_score","career_progression_score",
 print(df_features[scores].describe().round(2).to_string())
 
 # ── STEP 7: SAVE ──────────────────────────────────────────────────────────────
-df_features.to_csv("features_extracted.csv", index=False)
-df.to_csv("candidates_full_cleaned.csv", index=False)
+df_features.to_csv(PROCESSED_DIR / "features_extracted.csv", index=False)
+df.to_csv(PROCESSED_DIR / "candidates_full_cleaned.csv", index=False)
 print("\nSaved: features_extracted.csv (use for ranking pipeline)")
 print("Saved: candidates_full_cleaned.csv (full cleaned data for debugging)")
 
