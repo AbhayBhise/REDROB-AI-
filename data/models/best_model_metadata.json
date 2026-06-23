@@ -1,0 +1,49 @@
+{
+  "model_name": "Elastic Net",
+  "artifact": "best_model_bundle.joblib",
+  "selected_features": [
+    "years_of_experience",
+    "num_jobs",
+    "avg_tenure_months",
+    "num_skills",
+    "advanced_skills",
+    "total_endorsements",
+    "avg_skill_duration_months",
+    "num_certifications",
+    "avg_assessment_score",
+    "edu_tier_enc",
+    "company_size_enc",
+    "profile_completeness_score",
+    "days_since_active",
+    "github_activity_score",
+    "connection_count",
+    "salary_mid",
+    "profile_views_received_30d",
+    "applications_submitted_30d",
+    "recruiter_response_rate",
+    "interview_completion_rate",
+    "offer_acceptance_rate",
+    "seniority_ratio",
+    "endorsement_per_skill",
+    "skill_versatility",
+    "open_to_work_flag",
+    "willing_to_relocate",
+    "work_mode_enc",
+    "verified_email",
+    "verified_phone",
+    "linkedin_connected",
+    "github_active"
+  ],
+  "trained_on": "train+val",
+  "validation_metrics": {
+    "r2": 0.838,
+    "mae": 2.425,
+    "rmse": 2.918
+  },
+  "test_metrics": {
+    "r2": 0.868,
+    "mae": 3.499,
+    "rmse": 4.028
+  },
+  "saved_at": "2026-06-22 00:00:00"
+}

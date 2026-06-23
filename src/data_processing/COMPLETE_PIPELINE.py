@@ -19,10 +19,12 @@ Run: python3 COMPLETE_PIPELINE.py
 import json
 import warnings
 import sys
+import joblib
 import pandas as pd
 import numpy as np
 from datetime import datetime
 from pathlib import Path
+from sklearn.base import clone
 
 # Plotting
 import matplotlib
@@ -53,8 +55,10 @@ TODAY = datetime(2026, 6, 22)
 DATA_DIR = ROOT_DIR / "data" / "external" / "Dataset" / "[PUB] India_runs_data_and_ai_challenge" / "[PUB] India_runs_data_and_ai_challenge" / "India_runs_data_and_ai_challenge"
 PROCESSED_DIR = ROOT_DIR / "data" / "processed"
 PLOTS_DIR = PROCESSED_DIR / "plots"
+MODELS_DIR = ROOT_DIR / "data" / "models"
 PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 PLOTS_DIR.mkdir(parents=True, exist_ok=True)
+MODELS_DIR.mkdir(parents=True, exist_ok=True)
 
 # Plotting style (dark mode)
 plt.style.use('dark_background')
@@ -417,24 +421,25 @@ TARGET = "master_score"
 X = df[SELECTED_FEATURES].fillna(0)
 y = df[TARGET]
 
-# Normalize features to [0,1]
-scaler = MinMaxScaler()
-X_scaled = pd.DataFrame(scaler.fit_transform(X), columns=SELECTED_FEATURES)
-
 # Split: 70% train, 15% val, 15% test
-X_train, X_temp, y_train, y_temp = train_test_split(
-    X_scaled, y, test_size=0.30, random_state=42, shuffle=True
+X_train_raw, X_temp_raw, y_train, y_temp = train_test_split(
+    X, y, test_size=0.30, random_state=42, shuffle=True
 )
-X_val, X_test, y_val, y_test = train_test_split(
-    X_temp, y_temp, test_size=0.50, random_state=42, shuffle=True
+X_val_raw, X_test_raw, y_val, y_test = train_test_split(
+    X_temp_raw, y_temp, test_size=0.50, random_state=42, shuffle=True
 )
 
 print(f"\n✓ SPLIT RATIOS (70/15/15):")
-print(f"  Train: {len(X_train):2d} candidates ({len(X_train)/50*100:5.1f}%)")
-print(f"  Val:   {len(X_val):2d} candidates ({len(X_val)/50*100:5.1f}%)")
-print(f"  Test:  {len(X_test):2d} candidates ({len(X_test)/50*100:5.1f}%)")
+print(f"  Train: {len(X_train_raw):2d} candidates ({len(X_train_raw)/50*100:5.1f}%)")
+print(f"  Val:   {len(X_val_raw):2d} candidates ({len(X_val_raw)/50*100:5.1f}%)")
+print(f"  Test:  {len(X_test_raw):2d} candidates ({len(X_test_raw)/50*100:5.1f}%)")
 
-print(f"\n✓ FEATURE SCALING: MinMaxScaler [0,1]")
+scaler = MinMaxScaler()
+X_train = pd.DataFrame(scaler.fit_transform(X_train_raw), columns=SELECTED_FEATURES, index=X_train_raw.index)
+X_val = pd.DataFrame(scaler.transform(X_val_raw), columns=SELECTED_FEATURES, index=X_val_raw.index)
+X_test = pd.DataFrame(scaler.transform(X_test_raw), columns=SELECTED_FEATURES, index=X_test_raw.index)
+
+print(f"\n✓ FEATURE SCALING: MinMaxScaler fit on train only [0,1]")
 print(f"  {len(SELECTED_FEATURES)} features selected for modeling")
 
 # Save split assignments back to df
@@ -515,6 +520,14 @@ print(f"  Selected on validation R² = {results[f'{best_model_name}_val']['r2']}
 print(f"  Test R² = {results[f'{best_model_name}_test']['r2']}")
 print(f"  Test MAE = {results[f'{best_model_name}_test']['mae']}")
 
+# Refit a final deployment bundle on train + validation data.
+X_trainval_raw = pd.concat([X_train_raw, X_val_raw], axis=0).sort_index()
+y_trainval = pd.concat([y_train, y_val], axis=0).sort_index()
+final_scaler = MinMaxScaler()
+X_trainval = final_scaler.fit_transform(X_trainval_raw)
+final_model = clone(models[best_model_name])
+final_model.fit(X_trainval, y_trainval)
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # SECTION 8: SAVE OUTPUTS
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -580,6 +593,38 @@ if feature_importance is not None:
     feature_importance.to_csv(PROCESSED_DIR / "feature_importance.csv", index=False)
     print(f"✓ Saved: feature_importance.csv (from {best_model_name})")
 
+# Save reusable model artifact bundle
+model_bundle = {
+    "model_name": best_model_name,
+    "model": final_model,
+    "scaler": final_scaler,
+    "selected_features": SELECTED_FEATURES,
+    "target": TARGET,
+    "trained_on": "train+val",
+    "validation_metrics": {
+        "r2": results[f"{best_model_name}_val"]["r2"],
+        "mae": results[f"{best_model_name}_val"]["mae"],
+        "rmse": results[f"{best_model_name}_val"]["rmse"],
+    },
+    "test_metrics": {
+        "r2": results[f"{best_model_name}_test"]["r2"],
+        "mae": results[f"{best_model_name}_test"]["mae"],
+        "rmse": results[f"{best_model_name}_test"]["rmse"],
+    },
+}
+joblib.dump(model_bundle, MODELS_DIR / "best_model_bundle.joblib")
+with open(MODELS_DIR / "best_model_metadata.json", "w") as f:
+    json.dump({
+        "model_name": best_model_name,
+        "artifact": "best_model_bundle.joblib",
+        "selected_features": SELECTED_FEATURES,
+        "trained_on": "train+val",
+        "validation_metrics": model_bundle["validation_metrics"],
+        "test_metrics": model_bundle["test_metrics"],
+        "saved_at": str(TODAY),
+    }, f, indent=2)
+print(f"✓ Saved: best_model_bundle.joblib and best_model_metadata.json")
+
 # Summary stats
 summary = {
     "total_records": len(df),
@@ -590,11 +635,11 @@ summary = {
     "best_model": best_model_name,
     "best_test_r2": results[f"{best_model_name}_test"]["r2"],
     "best_test_mae": results[f"{best_model_name}_test"]["mae"],
+    "best_model_artifact": str(MODELS_DIR / "best_model_bundle.joblib"),
     "timestamp": str(TODAY)
 }
-import json as json_module
 with open(PROCESSED_DIR / "summary.json", "w") as f:
-    json_module.dump(summary, f, indent=2)
+    json.dump(summary, f, indent=2)
 print(f"✓ Saved: summary.json (metadata)")
 
 print("\n" + "="*80)

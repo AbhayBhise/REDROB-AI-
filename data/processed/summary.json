@@ -4,8 +4,9 @@
   "train_size": 35,
   "val_size": 7,
   "test_size": 8,
-  "best_model": "Ridge Regression",
-  "best_test_r2": 0.965,
-  "best_test_mae": 1.708,
+  "best_model": "Elastic Net",
+  "best_test_r2": 0.868,
+  "best_test_mae": 3.499,
+  "best_model_artifact": "C:\\Users\\Disha Satpute\\Downloads\\redrob-ai\\data\\models\\best_model_bundle.joblib",
   "timestamp": "2026-06-22 00:00:00"
 }
