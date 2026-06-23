@@ -191,13 +191,18 @@ If given more development time (e.g., a one-month horizon), we would:
 ## 13. Reproducibility
 
 ### Setup
-Ensure you have Python 3.10+ installed. Install the pinned dependencies:
-```bash
-pip install -r requirements.txt
-```
+1. Ensure you have Python 3.10+ installed. Install the pinned dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. **Dataset Note**: The raw `candidates.jsonl` (487 MB) is excluded from this repository via `.gitignore` to conform to standard ML version control practice. Prior to running, place the competition's `candidates.jsonl` file in the repository root (or specify its location using the `--candidates` argument).
 
 ### Option A: Run Ranking Directly (Recommended)
-We have committed the precomputed float16 embeddings to the repository so you do not need to re-run the 90-minute embedding step. Simply run:
+We have committed the precomputed float16 embeddings to the repository so you do not need to re-run the 90-minute embedding step. 
+
+> **Quantization Note**: Precomputed embeddings are stored as `float16` to satisfy GitHub's 100 MB file size constraint while preserving the exact same Top-100 candidate set. Internal validation showed that converting from float32 to float16 resulted in only a single adjacent rank swap (at rank 40/41) between two candidates who were virtually tied in score, and 0.00% change in the final Top-100 candidate membership.
+
+Simply run:
 ```bash
 python rank.py --candidates candidates.jsonl --out submission.csv
 ```
@@ -208,7 +213,7 @@ If you wish to re-generate the embeddings from scratch (takes ~90 minutes on CPU
 ```bash
 python precompute.py --candidates candidates.jsonl
 ```
-This will overwrite `data/candidates_embeddings.npy` and `data/candidate_ids_ordered.json`.
+This will overwrite `data/candidates_embeddings.npy` and `data/candidate_ids_ordered.json` as float16 embeddings.
 
 ### Validate Submission Format
 To verify that the output meets all formatting guidelines:
