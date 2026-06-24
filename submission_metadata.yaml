@@ -12,10 +12,18 @@ primary_contact:
   phone: "+91-XXXXXXXXXX"     # <-- Fill this in
 
 team_members:
-  - name: "YOUR NAME"         # <-- Fill this in
-    email: "YOUR@EMAIL.COM"   # <-- Fill this in
-    role: "ML Engineer"
 
+  - name: "Disha Satpute"
+    email: "dishasatpute44@gmail.com"
+    role: "AI & Backend Developer"
+
+  - name: "Vaishnavi Phad"
+    email: "phadvaishnavi1905@gmail.com"
+    role: "Agentic AI Research & Data Lead"
+
+  - name: "Vishal Ghuge"
+    email: "vishalghuge2005@gmail.com"
+    role: "Full Stack & Product Developer"
 # ============================================================================
 # Code and reproducibility
 # ============================================================================
