@@ -33,47 +33,99 @@ Our hybrid candidate retrieval and scoring architecture separates heavy neural n
 
 ```mermaid
 graph TD
-    %% Offline Precomputation Stage
-    subgraph Offline Stage [Stage 1: Offline Embedding Generation - precompute.py]
-        A[candidates.jsonl <br> 100K Profiles] -->|Extract career text| B(build_candidate_text)
-        B -->|Batch encode| C[BAAI/bge-small-en-v1.5]
-        C -->|Precomputed Embeddings| E[data/candidates_embeddings.npy]
-        A -->|Extract IDs| F[data/candidate_ids_ordered.json]
-    end
 
-    %% Online Ranking Stage
-    subgraph Online Stage [Stage 2: Hybrid Scoring & Fusion - rank.py]
-        G[Job Description] -->|Live encode| H[BGE-Small-En Encoder]
-        H -->|JD Embedding| I[Cosine Similarity Engine]
-        E -->|Load vectors| I
-        
-        G -->|Tokenize| J[BM25 Indexer]
-        A -->|Index Text with repeats| J
-        J -->|Lexical Match| K(BM25 Score)
-        
-        A -->|Feature Scanners| L[MasterScore Feature Engine]
-        L -->|Raw Master Score| M(MasterScore)
-        
-        I -->|Semantic Score| N{Multi-Signal Fusion}
-        K -->|Lexical Score| N
-        M -->|MasterScore| N
-        
-        N -->|Composite Score| O[Honeypot Filter & Consulting Penalty]
-        O -->|Sorted List| P[Tie-Breaker: Candidate ID Ascending]
-        P -->|Top 100| Q[submission.csv]
-    end
+%% ===========================
+%% Stage 1 - Offline Processing
+%% ===========================
 
-    classDef stage fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef file fill:#bbf,stroke:#333,stroke-width:1px;
-    classDef process fill:#dfd,stroke:#333,stroke-width:1px;
-    
-    class Offline Stage,Online Stage stage;
-    class A,E,F,Q file;
-    class B,C,E,H,I,J,L,N,O,P process;
+subgraph OfflineStage["Stage 1: Offline Embedding Generation (precompute.py)"]
+
+A["candidates.jsonl<br>100K Profiles"]
+
+B["build_candidate_text()"]
+
+C["BAAI/bge-small-en-v1.5<br>Sentence Transformer"]
+
+E["candidates_embeddings.npy"]
+
+F["candidate_ids_ordered.json"]
+
+A -->|"Extract Career Text"| B
+B -->|"Batch Encode"| C
+C -->|"Generate Embeddings"| E
+A -->|"Extract Candidate IDs"| F
+
+end
+
+%% ===========================
+%% Stage 2 - Online Ranking
+%% ===========================
+
+subgraph OnlineStage["Stage 2: Hybrid Ranking Pipeline (rank.py)"]
+
+G["Job Description"]
+
+H["BGE-Small Encoder"]
+
+I["Cosine Similarity"]
+
+J["BM25 Index"]
+
+K["BM25 Score"]
+
+L["MasterScore Feature Engine"]
+
+M["MasterScore"]
+
+N{"Multi-Signal Fusion"}
+
+O["Honeypot Filter<br>Consulting Penalty"]
+
+P["Tie Breaker<br>Candidate ID Ascending"]
+
+Q["submission.csv<br>Top 100"]
+
+end
+
+%% Semantic Pipeline
+G -->|"Live Encode"| H
+H -->|"JD Embedding"| I
+E -->|"Load Candidate Embeddings"| I
+
+%% BM25 Pipeline
+G -->|"Tokenize"| J
+A -->|"Index Candidate Text"| J
+J -->|"Lexical Score"| K
+
+%% Feature Pipeline
+A -->|"Feature Extraction"| L
+L -->|"Compute"| M
+
+%% Fusion
+I -->|"Semantic Score"| N
+K -->|"Lexical Score"| N
+M -->|"MasterScore"| N
+
+%% Final Ranking
+N -->|"Composite Score"| O
+O -->|"Sort"| P
+P -->|"Top 100"| Q
+
+%% Styling
+
+classDef stage fill:#E8EAF6,stroke:#3949AB,stroke-width:2px,color:#000;
+classDef file fill:#BBDEFB,stroke:#1E88E5,color:#000;
+classDef process fill:#C8E6C9,stroke:#43A047,color:#000;
+classDef decision fill:#FFE082,stroke:#FB8C00,color:#000;
+
+class OfflineStage,OnlineStage stage;
+
+class A,E,F,Q file;
+
+class B,C,G,H,I,J,K,L,M,O,P process;
+
+class N decision;
 ```
-
----
-
 ## 4. Overall Pipeline & Workflow
 
 The ranking pipeline consists of a two-stage hybrid process:
