@@ -7,11 +7,14 @@
 team_name: "YOUR-TEAM-NAME"   # <-- Fill this in
 
 primary_contact:
-  name: "YOUR NAME"           # <-- Fill this in
-  email: "YOUR@EMAIL.COM"     # <-- Fill this in
-  phone: "+91-XXXXXXXXXX"     # <-- Fill this in
+  name: "Abhay Bhise"           # <-- Fill this in
+  email: "bhiseabhay890@gmail.com"     # <-- Fill this in
+  phone: "+91-8766994340"     # <-- Fill this in
 
 team_members:
+  - name: "Abhay Bhise"
+    email: "bhiseabhay890@gmail.com"
+    role: "AI & Backend Developer"
 
   - name: "Disha Satpute"
     email: "dishasatpute44@gmail.com"
@@ -27,9 +30,9 @@ team_members:
 # ============================================================================
 # Code and reproducibility
 # ============================================================================
-github_repo: "https://github.com/YOUR_USERNAME/YOUR_REPO"   # <-- Fill this in
+github_repo: "https://github.com/YOUR_USERNAME/YOUR_REPO" 
 
-sandbox_link: "https://YOUR-APP.streamlit.app"              # <-- Fill after Streamlit deploy
+sandbox_link: "https://redrob-ai-india-runs.streamlit.app/"              
 
 reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
 
