@@ -209,7 +209,10 @@ We extract and compute 9 distinct feature scores from the candidate schemas to m
 
 For each candidate $c$, the final fused score is calculated as:
 
-$$\text{Score}(c) = 0.40 \times \text{SemanticSimilarity}(c) + 0.25 \times \text{BM25}(c) + 0.35 \times \text{MasterScore}(c)$$
+Final Score(c) =
+    (0.40 × SemanticSimilarity(c))
+  + (0.25 × BM25(c))
+  + (0.35 × MasterScore(c))
 
 ### Structural Multipliers and Penalties:
 * **Honeypot Filter**: The candidate dataset contains synthetic "honeypot" profiles. We detect these by comparing skill duration against the candidate's total years of experience. Candidates showing impossible skill durations (e.g., listing 10 years of experience with 3 separate skills listed as 15 years duration each) are flagged and assigned a hard-coded score of `0.001` to force them to the bottom of the list.
