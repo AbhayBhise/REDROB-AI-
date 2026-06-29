@@ -136,24 +136,24 @@ with tab2:
     <body>
         <div class="mermaid">
             graph TD
-                A[100K Candidates JSONL] --> B[Precompute Offline BAAI]
-                B --> C[embeddings.npz float16]
+                A["100K Candidates JSONL"] --> B["Precompute Offline BAAI"]
+                B --> C["embeddings npz float16"]
                 
-                D[Job Description] --> E[LLM Expansion Synonyms]
+                D["Job Description"] --> E["LLM Expansion Synonyms"]
                 
-                E --> G[Hybrid Retrieval Engine]
+                E --> G["Hybrid Retrieval Engine"]
                 C --> G
                 
-                G -->|Dense + BM25 + Heuristics| H[Top 500 Candidates]
+                G -->|"Dense BM25 Heuristics"| H["Top 500 Candidates"]
                 
-                H --> I{Cross-Encoder Available?}
-                I -->|YES| J[ms-marco Re-ranking]
-                I -->|NO| K[Baseline Hybrid Scores]
-                J --> L[Top 100 Selected]
+                H --> I["Cross Encoder Available"]
+                I -->|"YES"| J["ms-marco Re-ranking"]
+                I -->|"NO"| K["Baseline Hybrid Scores"]
+                J --> L["Top 100 Selected"]
                 K --> L
                 
-                L --> M[LLM Reasoning Engine]
-                M --> N[submission.csv Final Output]
+                L --> M["LLM Reasoning Engine"]
+                M --> N["submission csv Final Output"]
                 
                 style A fill:#c7d2fe,stroke:#4f46e5,stroke-width:2px
                 style D fill:#c7d2fe,stroke:#4f46e5,stroke-width:2px

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Architecture Diagrams for PPT</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: {
+            primaryColor: '#e0e7ff',
+            primaryTextColor: '#1e3a8a',
+            primaryBorderColor: '#4f46e5',
+            lineColor: '#4b5563',
+            secondaryColor: '#fef08a',
+            tertiaryColor: '#fbcfe8'
+        }});
+    </script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background-color: #f3f4f6; }
+        .diagram-container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 40px; text-align: center; }
+        h2 { color: #1f2937; margin-bottom: 20px; font-weight: 600; text-align: left;}
+        p { color: #4b5563; text-align: left;}
+    </style>
+</head>
+<body>
+
+    <h1 style="color: #111827;">Redrob Track 1: Presentation Diagrams</h1>
+    <p><em>Tip: Zoom in (Ctrl + Scroll) to make the diagrams larger, then use Snipping Tool (Windows Key + Shift + S) to take crystal-clear screenshots for your PowerPoint!</em></p>
+
+    <div class="diagram-container">
+        <h2>1. End-to-End System Architecture (For Slide 7)</h2>
+        <div class="mermaid">
+            graph TD
+                A["100K Candidates (JSONL)"] --> B["Precompute Offline<br/>BAAI/bge-base (768-dim)"]
+                B --> C[("embeddings.npz<br/>(Compressed float16)")]
+                
+                D["Job Description"] --> E["LLM Expansion<br/>(Extract Synonyms)"]
+                
+                E --> G["Hybrid Retrieval Engine"]
+                C --> G
+                
+                G -->|Dense + BM25 + Heuristics| H["Top 500 Candidates"]
+                
+                H --> I{"Cross-Encoder<br/>Available?"}
+                I -->|YES| J["ms-marco Re-ranking"]
+                I -->|NO| K["Baseline Hybrid Scores"]
+                J --> L["Top 100 Selected"]
+                K --> L
+                
+                L --> M["LLM Reasoning Engine<br/>(Generates Justifications)"]
+                M --> N["submission.csv<br/>(Final Output)"]
+                
+                style A fill:#c7d2fe,stroke:#4f46e5,stroke-width:2px
+                style D fill:#c7d2fe,stroke:#4f46e5,stroke-width:2px
+                style N fill:#a7f3d0,stroke:#059669,stroke-width:2px
+                style G fill:#fde68a,stroke:#d97706,stroke-width:2px
+        </div>
+    </div>
+
+    <div class="diagram-container">
+        <h2>2. Scoring Fusion Strategy (For Slide 4)</h2>
+        <div class="mermaid">
+            graph LR
+                A["Candidate Profile"] --> B["Dense Semantic Score<br/>(40% Weight)"]
+                A --> C["BM25 Lexical Score<br/>(25% Weight)"]
+                A --> D["Heuristic Master Score<br/>(35% Weight)"]
+                
+                D --> D1["Experience Match"]
+                D --> D2["Title Relevance"]
+                D --> D3["Consulting Penalty"]
+                D --> D4["Honeypot Filter"]
+                
+                B --> E(("Final<br/>Hybrid<br/>Score"))
+                C --> E
+                D --> E
+                
+                E --> F["XGBoost Learning-to-Rank<br/>(Score Optimization)"]
+                
+                style E fill:#fbcfe8,stroke:#db2777,stroke-width:2px
+                style F fill:#bfdbfe,stroke:#2563eb,stroke-width:2px
+        </div>
+    </div>
+
+</body>
+</html>
