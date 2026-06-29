@@ -220,6 +220,7 @@ python rank.py --candidates candidates.jsonl --out submission.csv
 | **Python** | Python 3.10 or higher |
 | **CUDA (Optional)**| CUDA Toolkit 11.8 or 12.1 (For GPU Acceleration via PyTorch) |
 | **Packages**| See `requirements.txt` (`torch`, `transformers`, `xgboost`, etc.) |
+| **Network** | Internet required for *first run only* to cache HuggingFace weights locally. 100% offline thereafter. |
 
 ---
 
