@@ -19,7 +19,7 @@ st.set_page_config(
 st.title("🎯 Candidate Ranking System")
 st.markdown("**India Runs Hackathon Track 1 — Advanced Hybrid Pipeline**")
 
-tab1, tab2, tab3 = st.tabs(["🎯 Ranking Sandbox", "🧠 Architecture & Workflow", "📊 Model Details"])
+tab1, tab2, tab3, tab4 = st.tabs(["🎯 Ranking Sandbox", "🧠 Architecture & Workflow", "📊 Model Details", "👥 About the Team"])
 
 with tab1:
     st.markdown("### Candidate Evaluation")
@@ -142,6 +142,37 @@ with tab3:
     | **Learning-to-Rank** | `XGBoost` | ML model trained on 11 distinct profile features to weight the final score. |
     | **Reasoning Engine** | `GPT / Claude` | Generates human-readable justifications for recruiters. |
     """)
+
+with tab4:
+    st.header("👥 About the Team")
+    st.markdown("""
+    We are a team of AI developers participating in the **India Runs Hackathon Track 1**.
+    
+    Our vision was to build an enterprise-grade candidate ranking system that doesn't just rely on keyword matching, but truly understands the deep semantic meaning of resumes and job descriptions using state-of-the-art NLP models.
+    """)
+    
+    st.divider()
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("👨‍💻 Abhay Bhise")
+        st.caption("AI & Backend Developer")
+        st.markdown("[GitHub](https://github.com/AbhayBhise)")
+    
+    with col2:
+        st.subheader("👩‍💻 Disha Satpute")
+        st.caption("AI & Backend Developer")
+        
+    st.write("")
+    
+    col3, col4 = st.columns(2)
+    with col3:
+        st.subheader("👩‍💻 Vaishnavi Phad")
+        st.caption("Agentic AI Research & Data Lead")
+        
+    with col4:
+        st.subheader("👨‍💻 Vishal Ghuge")
+        st.caption("Full Stack & Product Developer")
 
 st.divider()
 st.caption("Developed for India Runs Hackathon Track 1 | Redrob AI")
