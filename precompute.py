@@ -55,8 +55,10 @@ def main():
     model_name = 'BAAI/bge-base-en-v1.5'
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModel.from_pretrained(model_name)
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model.to(device)
     model.eval()
-    print("Model loaded.")
+    print(f"Model loaded and moved to {device}.")
 
     print(f"Embedding {len(texts):,} candidates in batches of {args.batch_size}...")
     all_embeddings = []
@@ -66,12 +68,12 @@ def main():
         encoded = tokenizer(
             batch, padding=True, truncation=True,
             max_length=256, return_tensors='pt'
-        )
+        ).to(device)
         with torch.no_grad():
             output = model(**encoded)
             emb = output.last_hidden_state[:, 0, :]
             emb = emb / emb.norm(dim=1, keepdim=True)
-        all_embeddings.append(emb.numpy())
+        all_embeddings.append(emb.cpu().numpy())
 
         if i % 10000 == 0:
             pct = (i / len(texts)) * 100
