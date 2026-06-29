@@ -144,11 +144,11 @@ with tab2:
                 E --> G["Hybrid Retrieval Engine"]
                 C --> G
                 
-                G -->|"Dense BM25 Heuristics"| H["Top 500 Candidates"]
+                G -->|Dense BM25 Heuristics| H["Top 500 Candidates"]
                 
                 H --> I["Cross Encoder Available"]
-                I -->|"YES"| J["ms-marco Re-ranking"]
-                I -->|"NO"| K["Baseline Hybrid Scores"]
+                I -->|YES| J["ms-marco Re-ranking"]
+                I -->|NO| K["Baseline Hybrid Scores"]
                 J --> L["Top 100 Selected"]
                 K --> L
                 
