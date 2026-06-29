@@ -13,7 +13,7 @@
 3. [File-by-File Description](#file-by-file-description)
 4. [Architecture Explained](#architecture-explained)
 5. [How to Run (Step-by-Step)](#how-to-run-step-by-step)
-6. [The 5 High-ROI Upgrades](#the-5-high-roi-upgrades)
+6. [Core Architectural Pillars](#core-architectural-pillars)
 7. [Innovation Highlights](#innovation-highlights)
 
 ---
@@ -35,7 +35,7 @@ This is a **production-ready ranking engine** that identifies the **Top 100 best
 2. **Accuracy**: Hybrid + Cross-Encoder + LTR = +8-15% NDCG improvement
 3. **Code Quality**: Modular, tested, zero breaking changes
 4. **Documentation**: World-class with architecture diagrams
-5. **Innovation**: 5 complementary upgrades; "wow factor" from LLM reasoning
+5. **Innovation**: 5 advanced ML techniques; "wow factor" from LLM reasoning
 
 ---
 
@@ -54,10 +54,10 @@ REDROB-AI-/
 ├── 📄 EVALUATOR_GUIDE.md               [This file]
 │
 ├── 📂 src/
-│   ├── rerank.py                       [Upgrade 1: Cross-Encoder re-ranking]
-│   ├── llm_reasoning.py                [Upgrade 2: LLM reasoning generation]
-│   ├── expand_jd.py                    [Upgrade 3: JD keyword expansion]
-│   ├── train_ltr.py                    [Upgrade 4: XGBoost Learning-to-Rank]
+│   ├── rerank.py                       [Core: Cross-Encoder re-ranking]
+│   ├── llm_reasoning.py                [Core: LLM reasoning generation]
+│   ├── expand_jd.py                    [Core: JD keyword expansion]
+│   ├── train_ltr.py                    [Core: XGBoost Learning-to-Rank]
 │   └── utils/
 │       └── [Shared utility functions]
 │
@@ -109,14 +109,14 @@ REDROB-AI-/
 
 ---
 
-### **Upgrade Modules (src/)**
+### **Core Modules (src/)**
 
-| File | Upgrade | Purpose | Dependencies | Optional? |
+| File | Component | Purpose | Dependencies | Optional? |
 |------|---------|---------|--------------|-----------|
-| `src/rerank.py` | **Upgrade 1** | Cross-Encoder pairwise re-ranking — fix dense compression loss | sentence-transformers | Yes (graceful fallback) |
-| `src/llm_reasoning.py` | **Upgrade 2** | Generate LLM-powered 2-sentence reasoning for each candidate | litellm + API keys | Yes (fallback to template) |
-| `src/expand_jd.py` | **Upgrade 3** | LLM-based offline JD keyword expansion (50-100 synonyms) | litellm + API keys | Yes (fallback to original JD) |
-| `src/train_ltr.py` | **Upgrade 4** | Train XGBoost Learning-to-Rank on 11 features | xgboost + pandas | Yes (fallback to hardcoded weights) |
+| `src/rerank.py` | **Component 1** | Cross-Encoder pairwise re-ranking — fix dense compression loss | sentence-transformers | Yes (graceful fallback) |
+| `src/llm_reasoning.py` | **Component 2** | Generate LLM-powered 2-sentence reasoning for each candidate | litellm + API keys | Yes (fallback to template) |
+| `src/expand_jd.py` | **Component 3** | LLM-based offline JD keyword expansion (50-100 synonyms) | litellm + API keys | Yes (fallback to original JD) |
+| `src/train_ltr.py` | **Component 4** | Train XGBoost Learning-to-Rank on 11 features | xgboost + pandas | Yes (fallback to hardcoded weights) |
 
 ---
 
@@ -192,7 +192,7 @@ REDROB-AI-/
 2. **Cross-Encoder Refinement**: Eliminates embedding compression loss (Bi-Encoder problem)
 3. **Learning-to-Rank**: ML-optimized weights vs. hardcoded heuristics
 4. **LLM Reasoning**: Human-readable justifications (not just scores)
-5. **Graceful Fallbacks**: Every upgrade is optional; system works even with 0 API keys
+5. **Graceful Fallbacks**: Every advanced component is optional; system works even with 0 API keys
 
 ---
 
@@ -230,7 +230,7 @@ rank,candidate_id,score,reasoning
 
 ---
 
-### **OPTION B: Full Pipeline with All 5 Upgrades** (~15-20 minutes)
+### **OPTION B: Full Advanced Pipeline** (~15-20 minutes)
 
 For the complete, high-ROI ranking:
 
@@ -241,7 +241,7 @@ pip install -r requirements.txt
 # Step 2: Set API keys (if using LLM features)
 export OPENAI_API_KEY="sk-..."  # Or ANTHROPIC_API_KEY, GEMINI_API_KEY
 
-# Step 3: Run full pipeline (all upgrades + ranking)
+# Step 3: Run full pipeline (all components + ranking)
 python scripts/run_pipeline.py --full
 
 # Step 4: Validate submission
@@ -291,9 +291,9 @@ python scripts/run_pipeline.py --validate
 
 ---
 
-## ⭐ The 5 High-ROI Upgrades
+## ⭐ Core Architectural Pillars
 
-### **Upgrade 1: Cross-Encoder Re-ranking**
+### **Pillar 1: Cross-Encoder Re-ranking**
 - **Module**: `src/rerank.py`
 - **Problem Solved**: Dense Bi-Encoders compress JD/candidate pairs into fixed dimensions, losing fine-grained relevance signals
 - **Solution**: Cross-Encoder directly scores (JD, Candidate) pairs pairwise
@@ -303,7 +303,7 @@ python scripts/run_pipeline.py --validate
 
 ---
 
-### **Upgrade 2: LLM-Generated Reasoning**
+### **Pillar 2: LLM-Generated Reasoning**
 - **Module**: `src/llm_reasoning.py`
 - **Problem Solved**: Deterministic template reasoning is impersonal and unconvincing
 - **Solution**: LLM generates 2-sentence personalized reasoning for each candidate
@@ -314,7 +314,7 @@ python scripts/run_pipeline.py --validate
 
 ---
 
-### **Upgrade 3: JD Keyword Expansion**
+### **Pillar 3: JD Keyword Expansion**
 - **Module**: `src/expand_jd.py` (offline preprocessing)
 - **Problem Solved**: BM25 lexical search misses alternate terminology (e.g., "ChromaDB" vs "Vector Database")
 - **Solution**: LLM generates 50-100 keyword synonyms; injected at 2x repetition in BM25
@@ -324,7 +324,7 @@ python scripts/run_pipeline.py --validate
 
 ---
 
-### **Upgrade 4: Learning-to-Rank (XGBoost)**
+### **Pillar 4: Learning-to-Rank (XGBoost)**
 - **Module**: `src/train_ltr.py` (offline training)
 - **Problem Solved**: Hardcoded feature weights (0.25×skill, 0.16×experience, etc.) are suboptimal
 - **Solution**: XGBoost learns feature importance from labeled candidates
@@ -335,7 +335,7 @@ python scripts/run_pipeline.py --validate
 
 ---
 
-### **Upgrade 5: Larger, Compressed Embeddings**
+### **Pillar 5: Larger, Compressed Embeddings**
 - **Problem Solved**: BAAI/bge-small (384-dim) loses semantic nuance; large .npy files exceed GitHub limits
 - **Solution**: Upgrade to BAAI/bge-base (768-dim) + .npz compression (float16)
 - **Storage**: 50MB vs 200MB (75% size reduction, zero accuracy loss)
@@ -355,8 +355,8 @@ python scripts/run_pipeline.py --validate
 - 🎯 **Top 100 in <1 minute** with human-readable reasoning
 
 #### **2. Production-Ready Code**
-- ✅ **Modular architecture**: Each upgrade in separate file, independently togglable
-- ✅ **Zero breaking changes**: Baseline always works, upgrades are additive
+- ✅ **Modular architecture**: Each component in separate file, independently togglable
+- ✅ **Robust design**: Graceful degradation; advanced features are additive
 - ✅ **Graceful fallbacks**: System degrades gracefully if API keys missing, models unavailable, etc.
 - ✅ **Comprehensive error handling**: Try/except everywhere; no silent failures
 
@@ -397,7 +397,7 @@ python scripts/run_pipeline.py --validate
 - [ ] Execution time: <45 seconds for 100K candidates
 
 ### **Innovation** ✅
-- [ ] 5 complementary upgrades (re-ranking, LLM, expansion, LTR, compression)
+- [ ] 5 advanced ML techniques (re-ranking, LLM, expansion, LTR, compression)
 - [ ] LLM reasoning for human-readable justifications
 - [ ] ML-learned feature weights vs. hardcoded
 - [ ] Graceful fallback architecture
@@ -421,13 +421,13 @@ python scripts/run_pipeline.py --validate
 ### **Common Issues & Solutions**
 
 **Issue**: `ModuleNotFoundError: No module named 'sentence_transformers'`
-**Solution**: Cross-Encoder upgrade is optional. System falls back to hybrid scoring. To enable: `pip install sentence-transformers`
+**Solution**: Cross-Encoder component is optional. System falls back to hybrid scoring. To enable: `pip install sentence-transformers`
 
 **Issue**: LLM reasoning not working (API key missing)
-**Solution**: LLM upgrade is optional. System uses template reasoning. To enable: Set `OPENAI_API_KEY` or `ANTHROPIC_API_KEY`
+**Solution**: LLM component is optional. System uses template reasoning. To enable: Set `OPENAI_API_KEY` or `ANTHROPIC_API_KEY`
 
 **Issue**: XGBoost model not found
-**Solution**: LTR upgrade requires training. To train: `python src/train_ltr.py --labeled-data data/raw/labeled_candidates.csv`. System falls back to hardcoded weights if model missing.
+**Solution**: LTR component requires training. To train: `python src/train_ltr.py --labeled-data data/raw/labeled_candidates.csv`. System falls back to hardcoded weights if model missing.
 
 **Issue**: Embeddings file not found
 **Solution**: Run `python precompute.py` to generate embeddings. This needs to be done once before ranking.
@@ -442,7 +442,7 @@ python scripts/run_pipeline.py --validate
 | **JD Expansion** | Augment BM25 2x | Use original JD only |
 | **LLM Reasoning** | API call for 2-sentence | Use template reasoning |
 
-**Result**: System is bulletproof. Even with 0 upgrades, baseline ranking works perfectly.
+**Result**: System is bulletproof. Even if all external APIs and advanced models fail, the baseline ranking engine works perfectly.
 
 ---
 
@@ -451,7 +451,7 @@ python scripts/run_pipeline.py --validate
 This submission is **production-ready** and **judges-friendly**:
 
 1. ✅ **Run Option A** (~50 sec) for quick verification
-2. ✅ **Run Option B** (~15 min) for full evaluation with all upgrades
+2. ✅ **Run Option B** (~15 min) for full evaluation with all advanced components
 3. ✅ Inspect `submission.csv` for output quality
 4. ✅ Review `README.md` for architecture deep-dive
 5. ✅ Check `SUBMISSION_CHECKLIST.md` for feature highlights

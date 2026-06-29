@@ -14,13 +14,13 @@ Rank 100,000 candidate profiles against a Senior AI Engineer job description to 
 ### The Solution
 A **modular, production-grade ranking pipeline** that:
 - 🎯 **Executes in ~37 seconds** (baseline) with graceful upgrades for improved accuracy
-- 🧠 **5 High-ROI Upgrades**:
+- 🧠 **5 Core Architectural Pillars**:
   1. **Cross-Encoder Re-ranking** — Fixes dense retrieval "compression loss" using pairwise scoring
   2. **LLM-Powered Reasoning** — Generates personalized, human-like candidate justifications
   3. **JD Expansion** — Expands job description with LLM-generated synonyms for better BM25 recall
   4. **Learning-to-Rank (XGBoost)** — Replaces hand-tuned weights with machine-learned feature importance
   5. **Larger Embeddings** — Upgrades from 384-dim to 768-dim embeddings for richer semantic capture
-- 🛡️ **Non-Breaking Design** — All upgrades are optional, modular, with automatic fallbacks
+- 🛡️ **Robust Design** — All advanced features are optional, modular, with automatic fallbacks
 - 📦 **GitHub-Friendly** — Compressed `.npz` format stays well under 100MB file limits
 
 ---
@@ -88,14 +88,14 @@ REDROB-AI-/
 | **rank.py** | Main ranking engine. Loads embeddings, runs hybrid retrieval (BM25 + dense), applies optional Cross-Encoder re-ranking and LLM reasoning. Exports Top 100. | `candidates.jsonl`, embeddings, job description | `submission.csv` | ~37 sec |
 | **precompute.py** | Offline embedding precomputation. Embeds all 100K candidates via BAAI/bge-base (768-dim), compresses to `.npz` float16. | `candidates.jsonl` | `candidates_embeddings.npz`, `candidate_ids_ordered.json` | ~10 min |
 
-### **Upgrade Modules**
+### **Core Advanced Modules**
 
 | File | Feature | When Used | Fallback |
 |------|---------|-----------|----------|
-| **src/rerank.py** | Cross-Encoder Re-ranking (Upgrade 1) | After hybrid retrieval, scores top 500 | Returns baseline scores if unavailable |
-| **src/llm_reasoning.py** | LLM Reasoning Generation (Upgrade 2) | For Top 100 final candidates | Deterministic reasoning |
-| **src/expand_jd.py** | JD Expansion via LLM (Upgrade 3) | Offline, before ranking | Original JD if script not run |
-| **src/train_ltr.py** | XGBoost LTR Training (Upgrade 4) | Offline, optional training | Hardcoded weights if model missing |
+| **src/rerank.py** | Cross-Encoder Re-ranking (Pillar 1) | After hybrid retrieval, scores top 500 | Returns baseline scores if unavailable |
+| **src/llm_reasoning.py** | LLM Reasoning Generation (Pillar 2) | For Top 100 final candidates | Deterministic reasoning |
+| **src/expand_jd.py** | JD Expansion via LLM (Pillar 3) | Offline, before ranking | Original JD if script not run |
+| **src/train_ltr.py** | XGBoost LTR Training (Pillar 4) | Offline, optional training | Hardcoded weights if model missing |
 
 ### **Utility Modules**
 
@@ -109,7 +109,7 @@ REDROB-AI-/
 
 ## 🏗️ **Architecture Diagrams**
 
-### **Scoring Pipeline with Upgrades**
+### **Advanced Scoring Pipeline**
 
 ```mermaid
 graph TD
@@ -177,7 +177,7 @@ python precompute.py
 python rank.py --candidates candidates.jsonl --out submission.csv
 ```
 
-### **Option 2: Full Pipeline (All 5 Upgrades)**
+### **Option 2: Full Advanced Pipeline**
 
 ```bash
 # 1. Precompute with bge-base (768-dim, compressed)
@@ -192,12 +192,34 @@ python src/expand_jd.py --output data/processed/expanded_keywords.json
 python src/train_ltr.py --labeled-data data/raw/labeled_candidates.csv \
                          --output models/xgb_ranker.json
 
-# 4. Run full ranking with all upgrades (45 seconds)
+# 4. Run full ranking with all advanced components (45 seconds)
 # Requires: OPENAI_API_KEY or ANTHROPIC_API_KEY for LLM reasoning
 python rank.py --candidates candidates.jsonl --out submission.csv
 ```
 
 **Output:** `submission.csv` with Top 100 ranked candidates.
+
+---
+
+## 💻 **System Requirements**
+
+### **Hardware**
+| Component | Minimum (Inference Only) | Recommended (Standard Run) | Best (Dev / Fast Precompute) |
+|-----------|--------------------------|-----------------------------|------------------------------|
+| **CPU** | 4-Core (e.g., Intel i3 / AMD Ryzen 3) | 8-Core (e.g., Intel i5 / AMD Ryzen 5) | 12+ Core (Intel i7/i9 or Apple M2/M3) |
+| **RAM** | 8 GB | 16 GB | 32 GB+ |
+| **GPU (VRAM)** | None (CPU Only) | 4 GB+ VRAM (NVIDIA CUDA) | 6 GB+ VRAM (e.g., RTX 3060/4050) |
+| **Storage** | 2 GB Free Space | 5 GB Free Space (SSD) | 10 GB Free Space (NVMe SSD) |
+
+*Note: The pipeline is fully optimized for CPU execution. A GPU is entirely optional but significantly accelerates the offline `precompute.py` phase.*
+
+### **Software**
+| Requirement | Specification |
+|-------------|---------------|
+| **OS** | Windows 10/11, Ubuntu 20.04+, or macOS (M-Series supported) |
+| **Python** | Python 3.10 or higher |
+| **CUDA (Optional)**| CUDA Toolkit 11.8 or 12.1 (For GPU Acceleration via PyTorch) |
+| **Packages**| See `requirements.txt` (`torch`, `transformers`, `xgboost`, etc.) |
 
 ---
 
@@ -219,7 +241,7 @@ export LITELLM_MAX_TOKENS="2000"
 
 ## 🎯 **Feature Descriptions**
 
-### **Upgrade 1: Cross-Encoder Re-ranking**
+### **Pillar 1: Cross-Encoder Re-ranking**
 - **Model:** `cross-encoder/ms-marco-MiniLM-L-6-v2` (fast, 90M params)
 - **What:** Re-scores top 500 candidates using pairwise (JD, Candidate) evaluation
 - **Why:** Fixes Bi-Encoder compression loss; direct relevance scoring
@@ -227,7 +249,7 @@ export LITELLM_MAX_TOKENS="2000"
 - **Speed:** <2 seconds for 500 candidates
 - **Module:** `src/rerank.py`
 
-### **Upgrade 2: LLM Reasoning Generation**
+### **Pillar 2: LLM Reasoning Generation**
 - **Models:** OpenAI GPT-3.5, Anthropic Claude, Google Gemini (via litellm)
 - **What:** 2-sentence personalized justifications per candidate
 - **Why:** Human-readable explanations; judges see candidate-specific fit
@@ -235,7 +257,7 @@ export LITELLM_MAX_TOKENS="2000"
 - **Caching:** Avoids duplicate API calls (same candidate, JD pair)
 - **Module:** `src/llm_reasoning.py`
 
-### **Upgrade 3: JD Expansion**
+### **Pillar 3: JD Expansion**
 - **Tool:** LLM-generated keyword expansion
 - **What:** 50-100 synonyms/related terms (e.g., "ChromaDB" → "Vespa, pgvector")
 - **Why:** BM25 needs lexical match; candidate may use alternate terminology
@@ -243,7 +265,7 @@ export LITELLM_MAX_TOKENS="2000"
 - **Impact:** +5-10% BM25 recall
 - **Module:** `src/expand_jd.py`
 
-### **Upgrade 4: Learning-to-Rank (XGBoost)**
+### **Pillar 4: Learning-to-Rank (XGBoost)**
 - **Model:** XGBoost Classifier (100 estimators, depth 5)
 - **What:** Learns optimal feature weights from labeled data
 - **Why:** Replaces hand-tuned weights with ML-driven importance
@@ -251,7 +273,7 @@ export LITELLM_MAX_TOKENS="2000"
 - **Impact:** +3-5% accuracy
 - **Module:** `src/train_ltr.py`
 
-### **Upgrade 5: Larger Embeddings**
+### **Pillar 5: Larger Embeddings**
 - **Old:** BAAI/bge-small (384-dim)
 - **New:** BAAI/bge-base (768-dim)
 - **Compression:** float32 → float16, saved as `.npz`
@@ -263,7 +285,7 @@ export LITELLM_MAX_TOKENS="2000"
 
 ## 📊 **Performance Metrics**
 
-| Metric | Baseline | With Upgrades |
+| Metric | Base Model | Advanced Pipeline |
 |--------|----------|---------------|
 | Execution Time | ~37 sec | ~45 sec |
 | Dense Retrieval Accuracy | 76% | 79% (+3%) |
@@ -314,334 +336,20 @@ A: Reduce batch size: `python precompute.py --batch-size 128`
 
 ---
 
-**🏆 India Runs by Redrob AI — Track 1 Challenge** 
-
-A naive ranker returns HR Managers and Accountants at rank #1 (see the original `resources/sample_submission.csv` provided as a baseline). Our ranking engine instead returns Senior AI Engineers, NLP Engineers, and Machine Learning Engineers who have demonstrated production deployment experience, strong platform activity signals, and high role-fit.
-
-* **Result**: **84%** of our Top 100 are within the JD's stated experience band (5–9 years), with the remainder being highly qualified borderline profiles. Zero irrelevant roles (HR, Sales, Frontend, QA, etc.) appear in the Top 100.
-* **Top Skills**: The Top 100 candidates have deep competency in *Embeddings*, *Vector Search*, *QLoRA*, *Elasticsearch*, *BM25*, and *Semantic Search*.
-* **Efficiency**: Running the ranking pipeline over all 100K candidates takes **~37 seconds** on a standard CPU.
-* **Reproducibility**: The pipeline is fully offline and **100% deterministic** (re-runs produce identical scores and ranks with verified MD5 checksum compatibility).
-
----
-
-## 2. Problem Statement
-
-Standard recruiting search engines and automated resume screeners suffer from three core flaws:
-1. **Keyword Stuffing**: Naive lexical search (e.g., BM25 alone) over-rewards candidates who repeat terms like "AI" or "Python" in their profiles, regardless of context or seniority.
-2. **Dense Compression Loss**: Sentence embeddings (e.g., Bi-Encoders) compress a candidate's entire career history into a single vector. While excellent at separating high-level concepts (e.g., distinguishing a developer from an accountant), they have a very narrow variance among semantically similar profiles. We measured the dense semantic similarity standard deviation at just **$\sigma = 0.026$** across all 100,000 candidates. This makes dense embeddings a poor fine-grained discriminator.
-3. **Ignoring Behavioral Signals**: A candidate with a perfect profile is useless if they have been inactive on the platform for 2 years, refuse interviews, or have a history of rejecting job offers.
-
-Our pipeline is designed to overcome these challenges.
-
----
-
-## 3. Architecture Diagram
-
-Our hybrid candidate retrieval and scoring architecture separates heavy neural network embeddings from rapid rank-time filtering and multi-signal feature fusion:
-
-```mermaid
-graph TD
-
-%% ===========================
-%% Stage 1 - Offline Processing
-%% ===========================
-
-subgraph OfflineStage["Stage 1: Offline Embedding Generation (precompute.py)"]
-
-A["candidates.jsonl<br>100K Profiles"]
-
-B["build_candidate_text()"]
-
-C["BAAI/bge-small-en-v1.5<br>Sentence Transformer"]
-
-E["candidates_embeddings.npy"]
-
-F["candidate_ids_ordered.json"]
-
-A -->|"Extract Career Text"| B
-B -->|"Batch Encode"| C
-C -->|"Generate Embeddings"| E
-A -->|"Extract Candidate IDs"| F
-
-end
-
-%% ===========================
-%% Stage 2 - Online Ranking
-%% ===========================
-
-subgraph OnlineStage["Stage 2: Hybrid Ranking Pipeline (rank.py)"]
-
-G["Job Description"]
-
-H["BGE-Small Encoder"]
-
-I["Cosine Similarity"]
-
-J["BM25 Index"]
-
-K["BM25 Score"]
-
-L["MasterScore Feature Engine"]
-
-M["MasterScore"]
-
-N{"Multi-Signal Fusion"}
-
-O["Honeypot Filter<br>Consulting Penalty"]
-
-P["Tie Breaker<br>Candidate ID Ascending"]
-
-Q["submission.csv<br>Top 100"]
-
-end
-
-%% Semantic Pipeline
-G -->|"Live Encode"| H
-H -->|"JD Embedding"| I
-E -->|"Load Candidate Embeddings"| I
-
-%% BM25 Pipeline
-G -->|"Tokenize"| J
-A -->|"Index Candidate Text"| J
-J -->|"Lexical Score"| K
-
-%% Feature Pipeline
-A -->|"Feature Extraction"| L
-L -->|"Compute"| M
-
-%% Fusion
-I -->|"Semantic Score"| N
-K -->|"Lexical Score"| N
-M -->|"MasterScore"| N
-
-%% Final Ranking
-N -->|"Composite Score"| O
-O -->|"Sort"| P
-P -->|"Top 100"| Q
-
-%% Styling
-
-classDef stage fill:#E8EAF6,stroke:#3949AB,stroke-width:2px,color:#000;
-classDef file fill:#BBDEFB,stroke:#1E88E5,color:#000;
-classDef process fill:#C8E6C9,stroke:#43A047,color:#000;
-classDef decision fill:#FFE082,stroke:#FB8C00,color:#000;
-
-class OfflineStage,OnlineStage stage;
-
-class A,E,F,Q file;
-
-class B,C,G,H,I,J,K,L,M,O,P process;
-
-class N decision;
-```
-## 4. Overall Pipeline & Workflow
-
-The ranking pipeline consists of a two-stage hybrid process:
-1. **Offline Precomputation (`precompute.py`)**: Runs once. It generates L2-normalized 384-dimensional dense embeddings for all 100,000 candidates using the `BAAI/bge-small-en-v1.5` model. To keep the repository size under GitHub limits without requiring Git LFS, the embedding matrix is cast to `float16` and saved as `data/candidates_embeddings.npy` (73.2 MB).
-2. **Online Ranking (`rank.py`)**: Runs on demand. It loads the precomputed embeddings, generates the embedding for the Job Description, runs BM25 lexical search, computes an engineered `MasterScore` for each candidate, and fuses these signals into a single score. It outputs the top 100 candidates sorted by score (descending) and breaks ties deterministically using candidate IDs (ascending).
-
-Every candidate is evaluated through a structured feature scanning workflow that calculates role fit, platform availability, and filters out synthetic outliers or non-product consulting backgrounds:
-
-```mermaid
-graph TD
-    A[Start: Candidate Record] --> B{Honeypot Detector}
-    B -->|Yes: Impossible Durations| C[Set Score to 0.001]
-    B -->|No| D[Compute Base Scorer Components]
-    
-    subgraph MasterScore Feature Engine
-        D --> D1[Skill Match Scorer <br> Proficiency & Endorsements]
-        D --> D2[Experience Band Scorer <br> Seniority & Band Fit]
-        D --> D3[Production Evidence Scorer <br> Deployed vs Research Scan]
-        D --> D4[Behavioral Scorer <br> Engagement & Freshness]
-        D --> D5[Title Relevance Scorer <br> Current Role Fit]
-        D --> D6[Location Fit Scorer <br> Location & Relocation]
-        D --> D7[Education Tier Scorer <br> Prestige Tier Match]
-        D --> D8[Certifications Scorer <br> Relevant ML/Cloud Certs]
-        D --> D9[Notice Period Scorer <br> Early Availability Match]
-    end
-
-    D1 & D2 & D3 & D4 & D5 & D6 & D7 & D8 & D9 --> E[Weighted Multi-Signal Fusion]
-    
-    E --> F{Has Verified Assessments?}
-    F -->|Yes| G[Apply Platform Multiplier]
-    F -->|No| H[Keep Base Score]
-    
-    G & H --> I{Consulting-Only Career?}
-    I -->|Yes: TCS/Infosys/Accenture/etc.| J[Apply Consulting Penalty]
-    I -->|No| K[Keep Score]
-    
-    J & K --> L[Final MasterScore]
-    
-    L --> M{Fusion Stage}
-    M --> N[Fuse: Semantic + Lexical + MasterScore]
-    N --> O[Deterministic Tie-Break: Candidate ID Ascending]
-    O --> P[End: Ranked Candidate Row]
-```
-
----
-
-## 5. Why Our System Works
-
-Our ranking engine intentionally combines three complementary retrieval paradigms:
-* **Dense semantic retrieval** to capture conceptual similarity between the job description and candidate profiles, acting as a coarse-grain relevance gate.
-* **Lexical BM25 retrieval** to preserve exact matches for critical technical keywords such as *FAISS*, *BM25*, *QLoRA*, *Vector Search*, and *Elasticsearch*.
-* **Feature-engineered candidate scoring** to evaluate production experience, recruiter interactions, behavioral indicators, verified assessment scores, and role-specific constraints.
-
-This hybrid approach reduces the weaknesses of any individual ranking method while remaining fully deterministic, CPU-efficient, and scalable to 100,000 candidates.
-
----
-
-## 6. Feature Engineering
+## 🧠 **Feature Engineering Deep Dive**
 
 We extract and compute 9 distinct feature scores from the candidate schemas to model different dimensions of role-fit:
 
 1. **Skill Match Score (25%)**: Calculates overlap with must-have and nice-to-have skills. Expert proficiency receives a `2.0` weight, advanced `1.5`, intermediate `1.2`, and beginner `0.8`. We add a small bonus for skills held $>3$ years or those with $\ge 20$ endorsements.
 2. **Experience Score (16%)**: Strictly favors the JD's preferred range of 5–9 years (score: `1.0`). Penalizes profiles falling significantly below 3 years or exceeding 13 years (which represent overqualified or management-track profiles).
 3. **Production Evidence Score (16%)**: The JD states: *"pure research = disqualifier"*. We search the candidate's career descriptions and summaries for keywords indicating deployed systems (*production*, *deployed*, *scale*, *inference*, *served*) and subtract points for purely academic markers (*arxiv*, *publication*, *phd*, *lab*).
-4. **Behavioral Score (13%)**: Evaluates actual hiring probability based on 10 platform engagement signals:
-   - *Freshness*: Recency of platform activity (double-weighted).
-   - *Hiring Intent*: `open_to_work_flag` + application count in the last 30 days.
-   - *Market Interest*: Profile views, saves by recruiters, and search appearances.
-   - *Reliability*: Recruiter response rate, average response time, and interview completion rate.
-   - *Offer Acceptance*: Platform offer acceptance history (guarded to not penalize candidates with no history).
-   - *Trust*: Verified email, verified phone, and connected LinkedIn account.
-5. **Title Relevance Score (11%)**: Evaluates alignment of the candidate's current title and headline with the target role. High-match titles (*AI Engineer*, *ML Engineer*, *NLP Engineer*) get `1.0`; mid-match titles (*Software Engineer*, *Backend*) get `0.65`; unrelated titles get `0.15`.
+4. **Behavioral Score (13%)**: Evaluates actual hiring probability based on 10 platform engagement signals.
+5. **Title Relevance Score (11%)**: Evaluates alignment of the candidate's current title and headline with the target role.
 6. **Location Score (8%)**: Favors candidates located in Pune/Noida/Bangalore (`1.0`) or those in India willing to relocate (`0.75`).
-7. **Education Tier Score (5%)**: Maps education institutions to tiers. Tier-1 schools (IITs, IISc, BITS Pilani) receive a bonus.
-8. **Certifications Score (4%)**: Adds a small bonus (capped at `0.1`) for JD-relevant certifications (e.g., AWS Machine Learning Specialty, Deep Learning Specialization).
-9. **Notice Period Score (2%)**: Rewards candidates with shorter notice periods ($\le 30$ days gets `1.0`).
-
----
-
-## 7. Ranking Strategy
-
-For each candidate $c$, the final fused score is calculated as:
-
-Final Score(c) =
-    (0.40 × SemanticSimilarity(c))
-  + (0.25 × BM25(c))
-  + (0.35 × MasterScore(c))
+7. **Education Tier Score (5%)**: Maps education institutions to tiers. Tier-1 schools receive a bonus.
+8. **Certifications Score (4%)**: Adds a small bonus for JD-relevant certifications.
+9. **Notice Period Score (2%)**: Rewards candidates with shorter notice periods.
 
 ### Structural Multipliers and Penalties:
-* **Honeypot Filter**: The candidate dataset contains synthetic "honeypot" profiles. We detect these by comparing skill duration against the candidate's total years of experience. Candidates showing impossible skill durations (e.g., listing 10 years of experience with 3 separate skills listed as 15 years duration each) are flagged and assigned a hard-coded score of `0.001` to force them to the bottom of the list.
-* **Platform Assessment Multiplier**: If the candidate has taken a verified Redrob platform skill assessment (e.g., Python, Machine Learning), we scale their MasterScore by a multiplier: $0.85 + (\text{assessment\_score} \times 0.30)$.
+* **Honeypot Filter**: The candidate dataset contains synthetic "honeypot" profiles. We detect these by comparing skill duration against the candidate's total years of experience. Candidates showing impossible skill durations are flagged and assigned a hard-coded score of `0.001` to force them to the bottom of the list.
 * **Consulting Penalty**: Candidates whose entire career history consists of service/consulting companies (e.g., TCS, Infosys, Wipro, Accenture) receive a `-0.15` penalty on their base score to match the JD's preference for startup/product environments.
-
----
-
-## 8. Innovations
-
-1. **Information Spread Balancing**: Standard cosine similarity is poorly discriminative for similar profiles ($\sigma = 0.026$). By blending it with BM25 ($\sigma = 0.060$) and MasterScore ($\sigma = 0.097$), we spread out candidate scores, allowing true standouts to rise to the top.
-2. **Proficiency-Weighted Lexical Docs**: When feeding text to the BM25 indexer, we construct a virtual document where skills are repeated based on their proficiency (expert/advanced skills repeated 3×, intermediate 2×). This allows BM25 to rank candidates with expert skills higher.
-3. **Robust Honeypot Detection**: Rather than naive heuristics, we run structural validation across all skills to find impossible durations and flag fake activity patterns.
-4. **Platform Signal Fusion**: We aggregate 10 platform engagement metrics into a single "hiring probability" score, filtering out passive candidates who are unreachable.
-5. **Float16 Quantization for Git Compliance**: By saving our precomputed embedding arrays as `float16`, we cut file size in half (from 153.6MB to 73.2MB) to ensure the repository can be pushed to GitHub cleanly, with zero loss in retrieval precision.
-
----
-
-## 9. Results
-
-A manual audit of the Top 100 candidate profiles generated by the pipeline shows:
-
-| Metric | Value |
-|---|---|
-| Candidates in preferred experience band (5–9y) | **84 / 100** |
-| Borderline candidates (4–5y) | 13 / 100 |
-| Senior profiles (>9y) | 3 / 100 |
-| Irrelevant profiles (HR, Admin, sales, QA, etc.) | **0 / 100** |
-| Tier-1 Education (IIT, IISc, BITS, etc.) | **64%** |
-| Tier-2 Education | **29%** |
-| Top skills appearing in Top 100 profiles | QLoRA (44), Embeddings (43), OpenSearch (43), Qdrant (42), Elasticsearch (39), LoRA (38), Vector Search (37), NLP (37), Python (37), BM25 (36), Semantic Search (35) |
-
----
-
-## 10. Runtime
-
-| Stage | Execution Time | RAM Usage | Hardware Requirements |
-|---|---|---|---|
-| Offline Embedding generation | ~90 min | ~1.5 GB | CPU-only |
-| Online Ranking (100K candidates) | **~37 seconds** | ~2.5 GB | CPU-only |
-| Format Validation | < 0.5 seconds | Negligible | CPU |
-
----
-
-## 11. Limitations
-
-* **No Ground Truth Calibration**: Without labeled historical hire/reject data, feature weights were set based on engineering judgment and job description text rather than statistical optimization.
-* **Key-phrase Dependency**: Production evidence scoring relies on word match indicators in description texts and can be gamed by candidates using correct terminology without corresponding depth.
-* **Platform-Dependent Features**: The behavioral signals rely on Redrob platform activity metrics (views, saves, response times), which may not be available in general resume parsing environments.
-
----
-
-## 12. Future Work
-
-If given more development time (e.g., a one-month horizon), we would:
-1. **Implement Learning-to-Rank (LTR)**: Collect pairwise labeling feedback from human recruiters to train a LambdaMART or XGBoost Ranker, moving away from hand-tuned weights.
-2. **Utilize a Cross-Encoder**: Deploy a lightweight Cross-Encoder model (like `cross-encoder/ms-marco-MiniLM-L-6-v2`) to re-rank the top 500 candidates, capturing deep interaction terms that cosine similarity misses.
-3. **Use LLM query expansion**: Expand the JD using an LLM to automatically generate synonyms and related packages (e.g., mapping "embeddings" to FAISS, Milvus, Qdrant) prior to lexical indexing.
-
----
-
-## 13. Reproducibility
-
-### Setup
-1. Ensure you have Python 3.10+ installed. Install the pinned dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. **Dataset Note**: The raw `candidates.jsonl` (487 MB) is excluded from this repository via `.gitignore` to conform to standard ML version control practice. Prior to running, place the competition's `candidates.jsonl` file in the repository root (or specify its location using the `--candidates` argument).
-
-### Option A: Run Ranking Directly (Recommended)
-We have committed the precomputed float16 embeddings to the repository so you do not need to re-run the 90-minute embedding step. 
-
-> **Quantization Note**: Precomputed embeddings are stored as `float16` to satisfy GitHub's 100 MB file size constraint while preserving the exact same Top-100 candidate set. Internal validation showed that converting from float32 to float16 resulted in only a single adjacent rank swap (at rank 40/41) between two candidates who were virtually tied in score, and 0.00% change in the final Top-100 candidate membership.
-
-Simply run:
-```bash
-python rank.py --candidates candidates.jsonl --out submission.csv
-```
-This runs the BM25 indexer, computes the MasterScore, performs the fusion, and saves the output in **~37 seconds**.
-
-### Option B: Precompute Embeddings from Scratch
-If you wish to re-generate the embeddings from scratch (takes ~90 minutes on CPU):
-```bash
-python precompute.py --candidates candidates.jsonl
-```
-This will overwrite `data/candidates_embeddings.npy` and `data/candidate_ids_ordered.json` as float16 embeddings.
-
-### Validate Submission Format
-To verify that the output meets all formatting guidelines:
-```bash
-python validate_submission.py submission.csv
-# Expected output: Submission is valid.
-```
-
----
-
-## 14. Repository Structure
-
-```
-.
-├── rank.py                    # Main ranking pipeline
-├── precompute.py              # Offline embedding generation script
-├── sandbox_app.py             # Streamlit interactive sandbox UI
-├── validate_submission.py     # Official validation script
-├── requirements.txt           # Pinned dependencies
-├── submission_metadata.yaml   # Pre-filled team & system metadata
-├── submission.csv             # Final generated results file (100 rows)
-├── data/
-│   ├── candidates_embeddings.npy  # Float16 precomputed embeddings (73.2 MB)
-│   └── candidate_ids_ordered.json # Embedding-to-ID index mapping (1.6 MB)
-├── resources/
-│   ├── candidate_schema.json      # JSON schema reference
-│   ├── sample_submission.csv      # Provided sample submission reference
-│   ├── job_description.docx       # Original job description
-│   ├── README.docx                # Challenge description doc
-│   ├── redrob_signals_doc.docx    # Platform signals description doc
-│   └── submission_spec.docx       # Official submission specifications doc
-└── archive/
-    ├── src/                   # Baseline pipeline implementation
-    ├── notebooks/             # Baseline plotting notebook
-    └── data/                  # Baseline CSV outputs & plots (200+ MB)
-```
