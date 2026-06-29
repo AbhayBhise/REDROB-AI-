@@ -124,41 +124,26 @@ with tab2:
     <!DOCTYPE html>
     <html lang="en">
     <head>
-        <script type="module">
-            import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-            mermaid.initialize({ startOnLoad: true, theme: 'default' });
-        </script>
+        <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
         <style>
-            body { font-family: 'Segoe UI', sans-serif; background-color: white; padding: 20px; border-radius: 8px; margin: 0; }
+            body { font-family: sans-serif; background-color: white; padding: 20px; border-radius: 8px; margin: 0; }
             .mermaid { text-align: center; }
         </style>
     </head>
     <body>
         <div class="mermaid">
             graph TD
-                A["100K Candidates JSONL"] --> B["Precompute Offline BAAI"]
-                B --> C["embeddings npz float16"]
-                
-                D["Job Description"] --> E["LLM Expansion Synonyms"]
-                
-                E --> G["Hybrid Retrieval Engine"]
-                C --> G
-                
-                G -->|Dense BM25 Heuristics| H["Top 500 Candidates"]
-                
-                H --> I["Cross Encoder Available"]
-                I -->|YES| J["ms-marco Re-ranking"]
-                I -->|NO| K["Baseline Hybrid Scores"]
-                J --> L["Top 100 Selected"]
-                K --> L
-                
-                L --> M["LLM Reasoning Engine"]
-                M --> N["submission csv Final Output"]
-                
-                style A fill:#c7d2fe,stroke:#4f46e5,stroke-width:2px
-                style D fill:#c7d2fe,stroke:#4f46e5,stroke-width:2px
-                style N fill:#a7f3d0,stroke:#059669,stroke-width:2px
-                style G fill:#fde68a,stroke:#d97706,stroke-width:2px
+            A[Candidates] --> B[Precompute Offline]
+            B --> C[Embeddings Database]
+            D[Job Description] --> E[LLM Expansion]
+            E --> G[Hybrid Retrieval Engine]
+            C --> G
+            G --> H[Top 500 Candidates]
+            H --> I[Cross-Encoder Re-ranking]
+            I --> J[Top 100 Selected]
+            J --> K[LLM Reasoning Engine]
+            K --> L[Final Output CSV]
         </div>
     </body>
     </html>
