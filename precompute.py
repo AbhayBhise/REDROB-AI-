@@ -31,7 +31,7 @@ def build_candidate_text(c):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--candidates', default='candidates.jsonl')
-    parser.add_argument('--out-embeddings', default='data/candidates_embeddings.npy')
+    parser.add_argument('--out-embeddings', default='data/processed/candidates_embeddings.npz')
     parser.add_argument('--out-ids', default='data/candidate_ids_ordered.json')
     parser.add_argument('--batch-size', type=int, default=256)
     args = parser.parse_args()
@@ -48,11 +48,11 @@ def main():
     texts = [build_candidate_text(c) for c in candidates]
     ids   = [c['candidate_id'] for c in candidates]
 
-    print("Loading BAAI/bge-small-en-v1.5 via transformers...")
+    print("Loading BAAI/bge-base-en-v1.5 via transformers (768-dim embeddings)...")
     from transformers import AutoTokenizer, AutoModel
     import torch
 
-    model_name = 'BAAI/bge-small-en-v1.5'
+    model_name = 'BAAI/bge-base-en-v1.5'
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModel.from_pretrained(model_name)
     model.eval()
@@ -80,8 +80,13 @@ def main():
     embeddings = np.vstack(all_embeddings)
     print(f"Embedding shape: {embeddings.shape}")
 
-    print(f"Saving to {args.out_embeddings}...")
-    np.save(args.out_embeddings, embeddings)
+    # Convert to float16 for compression (saves ~50% space while maintaining quality)
+    embeddings_float16 = embeddings.astype(np.float16)
+    
+    print(f"Saving compressed embeddings to {args.out_embeddings}...")
+    # Create output directory if needed
+    os.makedirs(os.path.dirname(args.out_embeddings), exist_ok=True)
+    np.savez_compressed(args.out_embeddings, embeddings=embeddings_float16)
 
     print(f"Saving ID mapping to {args.out_ids}...")
     with open(args.out_ids, 'w') as f:
@@ -89,8 +94,9 @@ def main():
 
     size_mb = os.path.getsize(args.out_embeddings) / (1024 * 1024)
     print(f"\nDone!")
-    print(f"  Embeddings: {args.out_embeddings} ({size_mb:.1f} MB)")
-    print(f"  Shape: {embeddings.shape}")
+    print(f"  Embeddings: {args.out_embeddings} ({size_mb:.1f} MB, compressed .npz format)")
+    print(f"  Original shape: {embeddings.shape}")
+    print(f"  Stored as: float16 (50% size reduction from float32)")
     print(f"  IDs saved: {args.out_ids}")
     print(f"\nNow run: python rank.py --candidates candidates.jsonl --out submission.csv")
 

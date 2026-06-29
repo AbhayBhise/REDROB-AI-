@@ -17,6 +17,32 @@ from rank_bm25 import BM25Okapi
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+# ── XGBoost LTR Model Loading ─────────────────────────────────────────────────
+
+XGB_MODEL = None  # Global model (loaded once at startup)
+
+def load_xgb_model():
+    """Load XGBoost LTR model (if available). Returns None if model unavailable."""
+    global XGB_MODEL
+    
+    model_path = 'models/xgb_ranker.json'
+    
+    if not os.path.exists(model_path):
+        return None  # Model file doesn't exist; fall back to hardcoded weights
+    
+    try:
+        import xgboost as xgb
+        model = xgb.XGBClassifier()
+        model.load_model(model_path)
+        print(f"✓ Loaded XGBoost LTR model from {model_path}")
+        return model
+    except ImportError:
+        print(f"  Warning: xgboost not installed. Using hardcoded weights.")
+        return None
+    except Exception as e:
+        print(f"  Warning: Failed to load XGBoost model: {e}. Using hardcoded weights.")
+        return None
+
 def embed_text(text, tokenizer, model):
     """Embed a single text string — used only for the JD at ranking time"""
     encoded = tokenizer(
@@ -426,18 +452,37 @@ def compute_score(c, debug=False):
     #   edu(0.05):   prestige signal — IIT/IISc meaningful but not dominant
     #   cert(0.04):  verified competency bonus
     #   notice(0.02): JD preference: sub-30d
-    base = (
-        0.25 * s_skill      +
-        0.16 * s_exp        +
-        0.16 * s_prod       +
-        0.13 * s_behavioral +
-        0.11 * s_title      +
-        0.08 * s_location   +
-        0.05 * s_edu        +
-        0.04 * s_cert       +
-        0.02 * s_notice
-    )
-    # Weights sum: 0.25+0.16+0.16+0.13+0.11+0.08+0.05+0.04+0.02 = 1.00
+    # Use XGBoost LTR model if available, otherwise fall back to hardcoded weights
+    if XGB_MODEL is not None:
+        features = np.array([[
+            s_skill,
+            s_exp,
+            s_prod,
+            s_behavioral,
+            s_location,
+            s_title,
+            s_assessment if s_assessment is not None else 0.0,
+            s_edu,
+            s_cert,
+            s_notice,
+            s_consult,
+        ]], dtype=np.float32)
+        
+        # Get probability of class 1 (Hire)
+        base = XGB_MODEL.predict_proba(features)[0][1]
+    else:
+        # Fallback: hardcoded weights
+        base = (
+            0.25 * s_skill      +
+            0.16 * s_exp        +
+            0.16 * s_prod       +
+            0.13 * s_behavioral +
+            0.11 * s_title      +
+            0.08 * s_location   +
+            0.05 * s_edu        +
+            0.04 * s_cert       +
+            0.02 * s_notice
+        )
 
     # Assessment multiplier — verified ground truth from Redrob platform
     if s_assessment is not None:
@@ -522,6 +567,20 @@ def generate_reasoning(c, score, rank):
     
     return reasoning
 
+def load_expanded_keywords():
+    """Load expanded JD keywords from file (if exists). Returns list of keywords or empty list."""
+    expanded_file = 'data/processed/expanded_keywords.json'
+    if os.path.exists(expanded_file):
+        try:
+            with open(expanded_file, 'r', encoding='utf-8') as f:
+                keywords = json.load(f)
+            print(f"  Loaded {len(keywords)} expanded keywords from {expanded_file}")
+            return keywords
+        except Exception as e:
+            print(f"  Warning: Failed to load expanded keywords: {e}")
+            return []
+    return []
+
 def build_candidate_text(c):
     """Build BM25 text representation.
     Priority order: current_title > headline > summary > skills > career > education.
@@ -590,27 +649,67 @@ def main():
     candidate_map = {c['candidate_id']: c for c in candidates}
     
     print("Loading precomputed embeddings...")
+    embeddings = None
+    embedding_model_used = 'BAAI/bge-small-en-v1.5'  # default fallback
+    
+    # Try to load .npz (newer format with bge-base)
+    npz_path = 'data/processed/candidates_embeddings.npz'
+    if os.path.exists(npz_path):
+        try:
+            with np.load(npz_path, allow_pickle=True) as npz_file:
+                embeddings = npz_file['embeddings']
+                # Convert from float16 back to float32 if needed
+                if embeddings.dtype == np.float16:
+                    embeddings = embeddings.astype(np.float32)
+                embedding_model_used = 'BAAI/bge-base-en-v1.5'
+                print(f"  Loaded embeddings from {npz_path} (768-dim, bge-base)")
+        except Exception as e:
+            print(f"  Warning: Failed to load {npz_path}: {e}")
+            embeddings = None
+    
+    # Fall back to .npy if .npz not found
+    if embeddings is None:
+        try:
+            embeddings = np.load(args.emb)
+            print(f"  Loaded embeddings from {args.emb} (384-dim, bge-small)")
+        except FileNotFoundError:
+            print(f"Error: No embeddings found. Please run precompute.py first.")
+            sys.exit(1)
+    
     try:
-        embeddings = np.load(args.emb)
         with open(args.ids, 'r', encoding='utf-8') as f:
             ordered_ids = json.load(f)
-        emb_dict = {cid: embeddings[i] for i, cid in enumerate(ordered_ids)}
     except FileNotFoundError:
-        print(f"Error: {args.emb} or {args.ids} not found. Please run precompute.py first.")
+        print(f"Error: {args.ids} not found. Please run precompute.py first.")
         sys.exit(1)
         
+    emb_dict = {cid: embeddings[i] for i, cid in enumerate(ordered_ids)}
+        
     print("Loading embedding model for JD...")
-    tokenizer = AutoTokenizer.from_pretrained('BAAI/bge-small-en-v1.5')
-    embed_model = AutoModel.from_pretrained('BAAI/bge-small-en-v1.5')
+    tokenizer = AutoTokenizer.from_pretrained(embedding_model_used)
+    embed_model = AutoModel.from_pretrained(embedding_model_used)
     embed_model.eval()
     
     jd_embedding = embed_text(JD_TEXT, tokenizer, embed_model)
     jd_emb_norm = jd_embedding  # already L2-normalized by embed_text
     
+    # Load XGBoost LTR model (optional; falls back to hardcoded weights if unavailable)
+    global XGB_MODEL
+    XGB_MODEL = load_xgb_model()
+    
     print("Initializing BM25...")
     tokenized_corpus = [build_candidate_text(candidate_map[cid]).lower().split() for cid in ordered_ids]
     bm25 = BM25Okapi(tokenized_corpus)
+    
+    # Build tokenized JD with optional expanded keywords for improved recall
     tokenized_jd = JD_TEXT.lower().split()
+    expanded_keywords = load_expanded_keywords()
+    if expanded_keywords:
+        # Repeat expanded keywords 2x to ensure they carry weight in BM25 scoring
+        tokenized_jd.extend(expanded_keywords)
+        tokenized_jd.extend(expanded_keywords)  # 2x repetition
+        print(f"  Augmented tokenized_jd with {len(expanded_keywords)} expanded keywords (2x repetition)")
+    
     bm25_scores_raw = bm25.get_scores(tokenized_jd)
     max_bm25 = max(bm25_scores_raw) if max(bm25_scores_raw) > 0 else 1.0
     bm25_scores_dict = {cid: score/max_bm25 for cid, score in zip(ordered_ids, bm25_scores_raw)}
