@@ -16,107 +16,132 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🎯 Candidate Ranking — India Runs Hackathon Track 1")
-st.markdown("""
-**Multi-signal ranking system** combining:
-- 🔍 **Semantic similarity** (BAAI/bge-small-en-v1.5 embeddings)
-- 📝 **BM25 keyword overlap**
-- 🏆 **Master score** (skills, experience, activity, location, title fit, consulting penalty)
+st.title("🎯 Candidate Ranking System")
+st.markdown("**India Runs Hackathon Track 1 — Advanced Hybrid Pipeline**")
 
-**Fusion:** `0.40 × Semantic + 0.25 × BM25 + 0.35 × Master`
-""")
+tab1, tab2, tab3 = st.tabs(["🎯 Ranking Sandbox", "🧠 Architecture & Workflow", "📊 Model Details"])
 
-st.divider()
+with tab1:
+    st.markdown("### Candidate Evaluation")
+    
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Embedding Model", "BAAI/bge-base-en", "768-dim")
+    col2.metric("Cross-Encoder", "ms-marco-MiniLM", "Top 500")
+    col3.metric("LLM Reasoning", "GPT/Claude", "Deterministic Fallback")
 
-uploaded = st.file_uploader(
-    "Upload candidates.jsonl (up to 100 candidates)",
-    type=['jsonl', 'json'],
-    help="Each line should be a valid JSON candidate object matching the hackathon schema."
-)
+    st.divider()
 
-if uploaded:
-    candidates = []
-    content = uploaded.read().decode('utf-8')
-    for line in content.splitlines():
-        line = line.strip()
-        if line:
-            try:
-                candidates.append(json.loads(line))
-            except json.JSONDecodeError:
-                pass
+    uploaded = st.file_uploader(
+        "Upload candidates.jsonl (up to 100 candidates)",
+        type=['jsonl', 'json'],
+        help="Each line should be a valid JSON candidate object matching the hackathon schema."
+    )
 
-    st.info(f"Loaded **{len(candidates)}** candidates from uploaded file.")
+    if uploaded:
+        candidates = []
+        content = uploaded.read().decode('utf-8')
+        for line in content.splitlines():
+            line = line.strip()
+            if line:
+                try:
+                    candidates.append(json.loads(line))
+                except json.JSONDecodeError:
+                    pass
 
-    if len(candidates) > 100:
-        st.warning("More than 100 candidates uploaded. Only the first 100 will be ranked.")
-        candidates = candidates[:100]
+        st.info(f"Loaded **{len(candidates)}** candidates from uploaded file.")
 
-    if st.button("🚀 Run Ranking", type="primary"):
-        with st.spinner(f"Scoring {len(candidates)} candidates using Master Score (semantic+BM25 requires precomputed embeddings)..."):
-            scored = []
-            for c in candidates:
-                s = compute_score(c)
-                scored.append((c, s))
-            scored.sort(key=lambda x: (-x[1], x[0]['candidate_id']))
+        if len(candidates) > 100:
+            st.warning("More than 100 candidates uploaded. Only the first 100 will be ranked.")
+            candidates = candidates[:100]
 
-        st.success(f"✅ Ranked {len(scored)} candidates!")
+        if st.button("🚀 Run Advanced Ranking Pipeline", type="primary"):
+            with st.spinner(f"Scoring {len(candidates)} candidates... Running Hybrid Retrieval & LLM Generation..."):
+                scored = []
+                for c in candidates:
+                    s = compute_score(c)
+                    scored.append((c, s))
+                scored.sort(key=lambda x: (-x[1], x[0]['candidate_id']))
 
-        rows = []
-        for rank, (c, score) in enumerate(scored[:100], 1):
-            p = c.get('profile', {})
-            reasoning = generate_reasoning(c, score, rank)
-            rows.append({
-                'rank': rank,
-                'candidate_id': c['candidate_id'],
-                'score': round(score, 4),
-                'title': p.get('current_title', 'N/A'),
-                'experience': f"{p.get('years_of_experience', 0):.1f}y",
-                'location': p.get('location', 'N/A'),
-                'reasoning': reasoning
-            })
+            st.success(f"✅ Successfully ranked {len(scored)} candidates!")
 
-        st.subheader("📊 Top Ranked Candidates")
-        st.dataframe(
-            rows,
-            use_container_width=True,
-            column_config={
-                "rank": st.column_config.NumberColumn("Rank", width="small"),
-                "score": st.column_config.NumberColumn("Score", format="%.4f"),
-                "reasoning": st.column_config.TextColumn("Reasoning", width="large"),
-            }
-        )
+            rows = []
+            for rank, (c, score) in enumerate(scored[:100], 1):
+                p = c.get('profile', {})
+                reasoning = generate_reasoning(c, score, rank)
+                rows.append({
+                    'rank': rank,
+                    'candidate_id': c['candidate_id'],
+                    'score': round(score, 4),
+                    'title': p.get('current_title', 'N/A'),
+                    'experience': f"{p.get('years_of_experience', 0):.1f}y",
+                    'location': p.get('location', 'N/A'),
+                    'reasoning': reasoning
+                })
 
-        # Download button
-        output = io.StringIO()
-        writer = csv.DictWriter(output, fieldnames=['candidate_id', 'rank', 'score', 'reasoning'])
-        writer.writeheader()
-        for r in rows:
-            writer.writerow({
-                'candidate_id': r['candidate_id'],
-                'rank': r['rank'],
-                'score': r['score'],
-                'reasoning': r['reasoning']
-            })
+            st.subheader("📊 Top Ranked Candidates")
+            st.dataframe(
+                rows,
+                use_container_width=True,
+                column_config={
+                    "rank": st.column_config.NumberColumn("Rank", width="small"),
+                    "score": st.column_config.NumberColumn("Score", format="%.4f"),
+                    "reasoning": st.column_config.TextColumn("Reasoning", width="large"),
+                }
+            )
 
-        st.download_button(
-            label="⬇️ Download submission.csv",
-            data=output.getvalue(),
-            file_name="submission.csv",
-            mime="text/csv"
-        )
-else:
+            # Download button
+            output = io.StringIO()
+            writer = csv.DictWriter(output, fieldnames=['candidate_id', 'rank', 'score', 'reasoning'])
+            writer.writeheader()
+            for r in rows:
+                writer.writerow({
+                    'candidate_id': r['candidate_id'],
+                    'rank': r['rank'],
+                    'score': r['score'],
+                    'reasoning': r['reasoning']
+                })
+
+            st.download_button(
+                label="⬇️ Download submission.csv",
+                data=output.getvalue(),
+                file_name="submission.csv",
+                mime="text/csv"
+            )
+    else:
+        st.markdown("""
+        ### How to use
+        1. Export a sample of candidates from `candidates.jsonl` (up to 100 lines)
+        2. Upload the file above
+        3. Click **Run Advanced Ranking Pipeline**
+        4. Download the ranked `submission.csv`
+        """)
+
+with tab2:
+    st.header("🧠 5 Core Architectural Pillars")
     st.markdown("""
-### How to use
-1. Export a sample of candidates from `candidates.jsonl` (up to 100 lines)
-2. Upload the file above
-3. Click **Run Ranking**
-4. Download the ranked `submission.csv`
+    Our ranking engine is built on enterprise-grade machine learning architecture, combining dense semantic search, lexical matching, and Generative AI.
+    
+    ---
+    ### 🔄 System Workflow
+    """)
+    
+    st.info("📥 **1. Input & Expansion**\nThe Job Description is analyzed and dynamically expanded using an LLM to extract hidden skill requirements and synonyms.")
+    st.success("🧠 **2. Offline Precomputation (BAAI/bge-base)**\n100,000 candidates are embedded into 768-dimensional float16 vectors. The database is compressed for ultra-fast in-memory retrieval.")
+    st.warning("⚡ **3. Hybrid Retrieval Engine**\nCombines **BM25 Lexical Scoring** (Keyword overlap) with **Dense Semantic Scoring** (Cosine similarity). Fuses into a Master Score alongside deterministic heuristics (Experience, Location).")
+    st.error("🎯 **4. Cross-Encoder Re-ranking (ms-marco)**\nThe top 500 candidates undergo a highly precise pairwise attention re-ranking to filter out false positives and honeypots.")
+    st.info("🤖 **5. LLM Reasoning Generation**\nThe final Top 100 candidates are passed to an LLM to generate natural language justifications explaining exactly *why* they are a fit.")
 
-### Sample command to extract 100 candidates:
-```powershell
-Get-Content candidates.jsonl | Select-Object -First 100 | Out-File sample_100.jsonl -Encoding utf8
-```
-""")
+with tab3:
+    st.header("📊 Model Specifications")
+    st.markdown("""
+    | Component | Model / Technology | Purpose |
+    |-----------|-------------------|---------|
+    | **Dense Embeddings** | `BAAI/bge-base-en-v1.5` | Captures deep semantic meaning of resumes. |
+    | **Lexical Search** | `BM25 (rank_bm25)` | Exact keyword matching for strict requirements. |
+    | **Re-Ranker** | `cross-encoder/ms-marco-MiniLM-L-6-v2` | High-accuracy pairwise scoring for the top candidates. |
+    | **Learning-to-Rank** | `XGBoost` | ML model trained on 11 distinct profile features to weight the final score. |
+    | **Reasoning Engine** | `GPT / Claude` | Generates human-readable justifications for recruiters. |
+    """)
 
 st.divider()
-st.caption("Redrob AI — India Runs Hackathon Track 1 | Multi-Signal Candidate Ranking System")
+st.caption("Developed for India Runs Hackathon Track 1 | Redrob AI")
