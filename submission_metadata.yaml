@@ -2,14 +2,14 @@
 # Track 1: Intelligent Candidate Discovery & Ranking
 
 # ============================================================================
-# Team identity — FILL IN YOUR DETAILS
+# Team identity 
 # ============================================================================
-team_name: "YOUR-TEAM-NAME"   # <-- Fill this in
+team_name: "TrueFit"   
 
 primary_contact:
-  name: "Abhay Bhise"           # <-- Fill this in
-  email: "bhiseabhay890@gmail.com"     # <-- Fill this in
-  phone: "+91-8766994340"     # <-- Fill this in
+  name: "Abhay Bhise"          
+  email: "bhiseabhay890@gmail.com"    
+  phone: "+91-8766994340"    
 
 team_members:
   - name: "Abhay Bhise"
@@ -30,9 +30,9 @@ team_members:
 # ============================================================================
 # Code and reproducibility
 # ============================================================================
-github_repo: "https://github.com/YOUR_USERNAME/YOUR_REPO" 
+github_repo: "https://github.com/AbhayBhise/REDROB-AI-.git" 
 
-sandbox_link: "https://redrob-ai-india-runs.streamlit.app/"              
+sandbox_link: "https://redrob-truefit.streamlit.app/"              
 
 reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
 
