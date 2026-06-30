@@ -155,7 +155,7 @@ with tab2:
     encoded = base64.urlsafe_b64encode(compressed).decode('utf-8')
     
     # Display as a native, crystal-clear SVG image
-    st.image(f"https://kroki.io/mermaid/svg/{encoded}", use_column_width=True)
+    st.image(f"https://kroki.io/mermaid/svg/{encoded}", width=700)
     
     st.divider()
     st.subheader("🔄 5 Core Architectural Pillars")
