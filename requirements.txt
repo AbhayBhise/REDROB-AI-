@@ -1,11 +1,13 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
 # Core ML / Embedding
 numpy==1.26.4
-torch==2.3.1
-transformers==4.44.0
-tokenizers==0.19.1
+torch
+transformers
+tokenizers
+xgboost
 
 # BM25 retrieval
 rank-bm25==0.2.2
 
-# Sandbox demo (optional, not required for ranking)
+# Sandbox demo
 streamlit>=1.35.0
