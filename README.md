@@ -218,7 +218,9 @@ python rank.py --candidates candidates.jsonl --out submission.csv
 # Install dependencies
 pip install -r requirements.txt
 
-# For LLM features (Reasoning, JD Expansion)
+# Optional: For LLM features (Reasoning, JD Expansion)
+# NOTE: If no keys are provided, the system gracefully falls back to 
+# 100% offline, deterministic reasoning to comply with offline sandbox constraints.
 export OPENAI_API_KEY="sk-..."              # OpenAI GPT-3.5/4
 export ANTHROPIC_API_KEY="sk-ant-..."       # Anthropic Claude
 
