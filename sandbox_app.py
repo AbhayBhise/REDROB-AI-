@@ -120,37 +120,42 @@ with tab2:
     st.header("🧠 System Architecture & Workflow")
     st.markdown("Our ranking engine is built on enterprise-grade machine learning architecture, combining dense semantic search, lexical matching, and Generative AI.")
     
-    mermaid_html = """
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-        <script>mermaid.initialize({startOnLoad:true});</script>
-        <style>
-            body { font-family: sans-serif; background-color: white; padding: 20px; border-radius: 8px; margin: 0; }
-            .mermaid { text-align: center; }
-        </style>
-    </head>
-    <body>
-        <div class="mermaid">
-            graph TD
-            A[Candidates] --> B[Precompute Offline]
-            B --> C[Embeddings Database]
-            D[Job Description] --> E[LLM Expansion]
-            E --> G[Hybrid Retrieval Engine]
-            C --> G
-            G --> H[Top 500 Candidates]
-            H --> I[Cross-Encoder Re-ranking]
-            I --> J[Top 100 Selected]
-            J --> K[LLM Reasoning Engine]
-            K --> L[Final Output CSV]
-        </div>
-    </body>
-    </html>
+    import base64
+    import zlib
+    
+    mermaid_code = """
+    graph TD
+        A["100K Candidates (JSONL)"] --> B["Precompute Offline BAAI"]
+        B --> C["embeddings.npz float16"]
+        
+        D["Job Description"] --> E["LLM Expansion Synonyms"]
+        
+        E --> G["Hybrid Retrieval Engine"]
+        C --> G
+        
+        G -->|"Dense + BM25 + Heuristics"| H["Top 500 Candidates"]
+        
+        H --> I{"Cross-Encoder Available?"}
+        I -->|"YES"| J["ms-marco Re-ranking"]
+        I -->|"NO"| K["Baseline Hybrid Scores"]
+        J --> L["Top 100 Selected"]
+        K --> L
+        
+        L --> M["LLM Reasoning Engine"]
+        M --> N["submission.csv Final Output"]
+        
+        style A fill:#c7d2fe,stroke:#4f46e5,stroke-width:2px
+        style D fill:#c7d2fe,stroke:#4f46e5,stroke-width:2px
+        style N fill:#a7f3d0,stroke:#059669,stroke-width:2px
+        style G fill:#fde68a,stroke:#d97706,stroke-width:2px
     """
     
-    import streamlit.components.v1 as components
-    components.html(mermaid_html, height=750, scrolling=True)
+    # Compress and encode for Kroki API
+    compressed = zlib.compress(mermaid_code.encode('utf-8'), 9)
+    encoded = base64.urlsafe_b64encode(compressed).decode('utf-8')
+    
+    # Display as a native, crystal-clear SVG image
+    st.image(f"https://kroki.io/mermaid/svg/{encoded}", use_column_width=True)
     
     st.divider()
     st.subheader("🔄 5 Core Architectural Pillars")
