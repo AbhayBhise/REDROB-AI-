@@ -53,11 +53,7 @@ REDROB-AI-/
 │   ├── rerank.py                    # Cross-Encoder re-ranking module
 │   ├── llm_reasoning.py             # LLM-powered candidate reasoning generation
 │   ├── expand_jd.py                 # LLM-based JD expansion (offline utility)
-│   ├── train_ltr.py                 # XGBoost LTR model training script
-│   └── utils/
-│       ├── io.py                    # Embedding I/O helpers (.npy / .npz handling)
-│       ├── features.py              # Feature extraction utilities
-│       └── safe_api.py              # Safe LLM API wrappers with timeout/fallback
+│   └── train_ltr.py                 # XGBoost LTR model training script
 │
 ├── scripts/
 │   ├── run_full_pipeline.sh / .bat  # End-to-end pipeline runner
@@ -97,15 +93,7 @@ REDROB-AI-/
 | **src/expand_jd.py** | JD Expansion via LLM (Pillar 3) | Offline, before ranking | Original JD if script not run |
 | **src/train_ltr.py** | XGBoost LTR Training (Pillar 4) | Offline, optional training | Hardcoded weights if model missing |
 
-### **Utility Modules**
 
-| File | Purpose |
-|------|---------|
-| **src/utils/io.py** | Load/save embeddings (.npy, .npz) with automatic fallback |
-| **src/utils/features.py** | Extract 11 scoring features for LTR training |
-| **src/utils/safe_api.py** | LLM API wrappers with timeout & retry logic |
-
----
 
 ## 🏗️ **Architecture Diagrams**
 
