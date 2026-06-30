@@ -154,8 +154,10 @@ with tab2:
     compressed = zlib.compress(mermaid_code.encode('utf-8'), 9)
     encoded = base64.urlsafe_b64encode(compressed).decode('utf-8')
     
-    # Display as a native, crystal-clear SVG image
-    st.image(f"https://kroki.io/mermaid/svg/{encoded}", width=700)
+    # Use Streamlit columns to perfectly center the SVG image
+    _, col, _ = st.columns([1, 6, 1])
+    with col:
+        st.image(f"https://kroki.io/mermaid/svg/{encoded}", use_column_width=True)
     
     st.divider()
     st.subheader("🔄 5 Core Architectural Pillars")
