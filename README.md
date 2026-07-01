@@ -153,20 +153,20 @@ graph LR
 
 ---
 
-## 🧪 **Testing Protocols (Offline Sandbox vs. Online Live Demo)**
+## 🧪 **Deployment Environments**
 
-This system is designed to operate flawlessly in two distinct environments, satisfying both the Stage 3 Evaluation constraints and the Stage 2 Pitch requirements:
+The system architecture is designed to support both secure, air-gapped terminal execution and interactive web-based deployments.
 
-### **1. Stage 3 Evaluation (100% Offline Sandbox Environment)**
-To evaluate the strict offline capability of the pipeline, evaluators should disconnect the host machine from the internet (air-gapped environment) and run the pipeline purely via terminal:
-*   The system detects the lack of LLM API keys or internet connection.
-*   It seamlessly falls back to local, pre-downloaded deterministic models (`BAAI/bge-base-en-v1.5` and `cross-encoder/ms-marco-MiniLM-L-6-v2`).
-*   No external API calls are made. 100,000 candidates are processed and ranked securely on-device.
+### **1. Secure Air-Gapped Execution (Offline Mode)**
+For environments with strict data privacy or network isolation requirements, the pipeline can be executed purely via the terminal without internet access:
+*   The system detects the absence of external LLM API keys or network connectivity.
+*   It seamlessly falls back to local, quantized deterministic models (`BAAI/bge-base-en-v1.5` and `cross-encoder/ms-marco-MiniLM-L-6-v2`).
+*   No external API calls are made, ensuring zero data egress. 100,000+ candidates are processed and ranked securely on-device.
 
-### **2. Stage 2 Pitch (Online Live Demo via Streamlit)**
-For interactive visual demonstrations during the pitch, we have provided a web-based UI (`sandbox_app.py`). 
-*   This UI allows judges to manually upload `jsonl` samples and see the AI generate reasoning in real-time. 
-*   It utilizes the exact same underlying logic, but wraps it in a visually engaging frontend.
+### **2. Interactive Dashboard (Online Mode)**
+For real-time visual analysis and stakeholder demonstrations, a web-based UI is provided (`sandbox_app.py`).
+*   This interface allows operators to manually upload `.jsonl` batches and observe the AI generate candidate reasoning in real-time.
+*   It utilizes the exact same underlying ranking logic as the offline mode, while providing an accessible frontend for non-technical users.
 
 ---
 

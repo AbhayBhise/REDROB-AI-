@@ -35,28 +35,28 @@
   - resources/
 ```
 
-## ✅ **Pre-Submission Dry Run & Validation**
+## ✅ **System Validation & Dry Runs**
 
-To ensure compliance with hackathon rules, test the system in both intended environments:
+To ensure robust deployment, validate the system across both operational environments:
 
-### **Validation A: Offline Sandbox (Stage 3 Evaluation)**
-*Purpose: Prove the system functions flawlessly without internet or LLM keys.*
-1. Disconnect machine from the internet (or remove API keys from environment).
-2. Run baseline processing:
+### **Validation A: Air-Gapped Execution (Offline Mode)**
+*Purpose: Verify that the system functions flawlessly without external network access or LLM API keys.*
+1. Disconnect the host machine from the internet (or unset all API environment variables).
+2. Execute the core ranking pipeline:
 ```bash
 python precompute.py
 python rank.py --candidates candidates.jsonl --out submission.csv
 ```
-✅ **Expected Result**: System gracefully falls back to local determinism, completes in ~50 seconds, and generates `submission.csv`.
+✅ **Expected Result**: The system gracefully defaults to local deterministic models, completes execution in ~50 seconds, and generates `submission.csv`.
 
-### **Validation B: Online Live Demo (Stage 1 & 2 Pitch)**
-*Purpose: Prove the interactive UI functions correctly for live demonstrations.*
-1. Ensure API keys are set for maximum reasoning capability.
-2. Launch the Streamlit server:
+### **Validation B: Interactive UI (Online Mode)**
+*Purpose: Verify that the web dashboard functions correctly for end-user interaction.*
+1. Ensure required API keys are configured in the environment for LLM reasoning capabilities.
+2. Initialize the web server:
 ```bash
 python -m streamlit run sandbox_app.py
 ```
-✅ **Expected Result**: Web dashboard boots successfully and allows manual `.jsonl` sample testing with real-time reasoning.
+✅ **Expected Result**: The Streamlit dashboard initializes successfully and processes manual `.jsonl` uploads with real-time analytics.
 
 ### **Option B: Full Test (All 5 Upgrades)**
 ```bash
