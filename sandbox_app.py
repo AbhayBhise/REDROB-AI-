@@ -40,11 +40,12 @@ with tab1:
     if uploaded:
         if uploaded.name.lower().endswith('.csv'):
             st.error("❌ Invalid file format. Please upload the raw `candidates.jsonl` file, not a `.csv` file. You can clear this file by clicking the 'X' on the right.")
-        else:
-            candidates = []
-            content = uploaded.read().decode('utf-8')
-            for line in content.splitlines():
-                line = line.strip()
+            st.stop()
+
+        candidates = []
+        content = uploaded.read().decode('utf-8')
+        for line in content.splitlines():
+            line = line.strip()
             if line:
                 try:
                     candidates.append(json.loads(line))
