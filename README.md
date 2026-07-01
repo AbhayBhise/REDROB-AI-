@@ -158,47 +158,41 @@ graph LR
 The system architecture is designed to support both secure, air-gapped terminal execution and interactive web-based deployments.
 
 ### **1. Secure Air-Gapped Execution (Offline Mode)**
-For environments with strict data privacy or network isolation requirements, the pipeline can be executed purely via the terminal without internet access:
-*   The system detects the absence of external LLM API keys or network connectivity.
-*   It seamlessly falls back to local, quantized deterministic models (`BAAI/bge-base-en-v1.5` and `cross-encoder/ms-marco-MiniLM-L-6-v2`).
-*   No external API calls are made, ensuring zero data egress. 100,000+ candidates are processed and ranked securely on-device.
-
-### **2. Interactive Dashboard (Online Mode)**
-For real-time visual analysis and stakeholder demonstrations, a web-based UI is provided (`sandbox_app.py`).
-*   This interface allows operators to manually upload `.jsonl` batches and observe the AI generate candidate reasoning in real-time.
-*   It utilizes the exact same underlying ranking logic as the offline mode, while providing an accessible frontend for non-technical users.
+    A --> G
+    
+    G --> H["Top N Candidates"]
+    
+    H --> I["Cross-Encoder<br/>Re-Ranking"]
+    H --> J["MasterScore Heuristics<br/>(Edu, Title, Location)"]
+    
+    I --> K["Learning-To-Rank<br/>XGBoost Fusion"]
+    J --> K
+    
+    K --> L["Advanced Deterministic<br/>Reasoning Generation"]
+    
+    L --> M["Output: submission.csv"]
+    end
+```
 
 ---
 
-## 🚀 **How to Run**
+## 🚀 **How to Run (Stage 3 Evaluation)**
 
-### **Option 1: Baseline (Quick)**
+Since the 100K candidate embeddings are already precomputed and provided (`data/processed/candidates_embeddings.npz`), you do not need to re-run the massive 10-minute embedding job. You only need to download the local model weights while online, and then run the ranking script offline.
+
+### **Step 1: Online Setup (Cache Model Weights)**
+*Run this step while connected to the internet to download the small model weights (~500MB) to your local cache.*
 
 ```bash
-# Precompute embeddings (one-time, ~10 min)
-python precompute.py
-
-# Run ranking pipeline (37 seconds)
-python rank.py --candidates candidates.jsonl --out submission.csv
+pip install -r requirements.txt
+python scripts/download_models.py
 ```
 
-### **Option 2: Full Advanced Pipeline**
+### **Step 2: Secure Air-Gapped Execution (Offline Mode)**
+*Disconnect from the internet. The system will automatically fall back to strict offline mode and use the cached local models.*
 
 ```bash
-# 1. Precompute with bge-base (768-dim, compressed)
-python precompute.py --batch-size 256
-
-# 2. Expand JD via LLM (optional, offline)
-# Requires: OPENAI_API_KEY
-python src/expand_jd.py --output data/processed/expanded_keywords.json
-
-# 3. Train XGBoost LTR Model (optional, offline)
-# Requires: data/raw/labeled_candidates.csv (candidate_id, label)
-python src/train_ltr.py --labeled-data data/raw/labeled_candidates.csv \
-                         --output models/xgb_ranker.json
-
-# 4. Run full ranking with all advanced components (45 seconds)
-# Requires: OPENAI_API_KEY or ANTHROPIC_API_KEY for LLM reasoning
+# Runs full pipeline (30-45 seconds)
 python rank.py --candidates candidates.jsonl --out submission.csv
 ```
 
@@ -257,23 +251,13 @@ export LITELLM_MAX_TOKENS="2000"
 - **Speed:** <2 seconds for 500 candidates
 - **Module:** `src/rerank.py`
 
-### **Pillar 2: LLM Reasoning Generation**
-- **Models:** OpenAI GPT-3.5, Anthropic Claude, Google Gemini (via litellm)
-- **What:** 2-sentence personalized justifications per candidate
-- **Why:** Human-readable explanations; judges see candidate-specific fit
-- **Impact:** Wow factor; judges appreciate thoughtful reasoning
-- **Caching:** Avoids duplicate API calls (same candidate, JD pair)
-- **Module:** `src/llm_reasoning.py`
+### **Pillar 2: Deterministic Heuristic Reasoning Generation**
+- **What:** Automated, personalized professional justifications per candidate.
+- **Why:** Full transparency; judges can immediately see why a candidate was penalized or promoted without risking external API constraints.
+- **Impact:** High reliability, runs instantly, 100% offline compliant.
+- **Format:** `[FIT]`, `[GAP]`, and `[STRONG]` markers for rapid readability.
 
-### **Pillar 3: JD Expansion**
-- **Tool:** LLM-generated keyword expansion
-- **What:** 50-100 synonyms/related terms (e.g., "ChromaDB" → "Vespa, pgvector")
-- **Why:** BM25 needs lexical match; candidate may use alternate terminology
-- **How:** 2x repetition in BM25 tokenizer for weight
-- **Impact:** +5-10% BM25 recall
-- **Module:** `src/expand_jd.py`
-
-### **Pillar 4: Learning-to-Rank (XGBoost)**
+### **Pillar 3: Learning-to-Rank (XGBoost)**
 - **Model:** XGBoost Classifier (100 estimators, depth 5)
 - **What:** Learns optimal feature weights from labeled data
 - **Why:** Replaces hand-tuned weights with ML-driven importance
@@ -281,7 +265,7 @@ export LITELLM_MAX_TOKENS="2000"
 - **Impact:** +3-5% accuracy
 - **Module:** `src/train_ltr.py`
 
-### **Pillar 5: Larger Embeddings**
+### **Pillar 4: Larger Embeddings**
 - **Old:** BAAI/bge-small (384-dim)
 - **New:** BAAI/bge-base (768-dim)
 - **Compression:** float32 → float16, saved as `.npz`
@@ -306,31 +290,27 @@ export LITELLM_MAX_TOKENS="2000"
 
 ## 📝 **Output Format**
 
-`submission.csv` contains:
+`submission.csv` strictly adheres to the Hackathon schema:
 
 ```csv
-rank,candidate_id,name,score,reasoning
-1,cand_001,John Doe,0.9847,"Built large-scale embedding retrieval systems at Google. Led ML teams with A/B testing, perfectly aligned with ranking expertise."
-2,cand_002,Jane Smith,0.9723,"Deep LLM fine-tuning & LoRA/QLoRA experience; shipped production ranking for 100M+ users."
+candidate_id,rank,score,reasoning
+CAND_0000001,1,0.9847,"[FIT] **Perfect Role Fit**: Built large-scale embedding retrieval systems at Google."
+CAND_0000002,2,0.9723,"[STRONG] **Top Tier Edu**: Deep LLM fine-tuning experience."
 ...
-100,cand_100,Name,0.7234,"reasoning text here"
 ```
 
 ---
 
 ## 🔧 **Troubleshooting**
 
-**Q: Embeddings not found**  
-A: Run `python precompute.py`
-
-**Q: LLM features not working**  
-A: Check `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` environment variables
+**Q: Hugging Face or Model Timeout errors**  
+A: Ensure you run `python scripts/download_models.py` while online before running `rank.py` offline.
 
 **Q: XGBoost model not found**  
-A: Run `python src/train_ltr.py` with labeled data, or use fallback weights
+A: Run `python src/train_ltr.py` with labeled data, or use fallback weights.
 
-**Q: Out of memory**  
-A: Reduce batch size: `python precompute.py --batch-size 128`
+**Q: Out of memory during offline evaluation**  
+A: The pipeline comfortably runs on 8GB RAM because the `.npz` embeddings load directly into memory. Close background processes if needed.
 
 ---
 
@@ -339,7 +319,6 @@ A: Reduce batch size: `python precompute.py --batch-size 128`
 - [BAAI/bge-base-en-v1.5](https://huggingface.co/BAAI/bge-base-en-v1.5)
 - [Cross-Encoder](https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2)
 - [XGBoost](https://xgboost.readthedocs.io/)
-- [litellm](https://docs.litellm.ai/)
 - [sentence-transformers](https://www.sbert.net/)
 
 ---

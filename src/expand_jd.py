@@ -1,4 +1,16 @@
 """
+================================================================================
+WARNING: EXPERIMENTAL FEATURE
+================================================================================
+This script is strictly experimental and NOT part of the official Stage 3 offline
+evaluation pipeline. 
+
+The primary Stage 3 ranking engine (rank.py) relies entirely on a fully 
+offline, deterministic hybrid retrieval module. 
+This file is kept only for archival purposes. 
+Do not use this for formal offline evaluation as it requires external API access.
+================================================================================
+
 LLM Query & Job Description Expansion
 
 This is an OFFLINE utility script that runs once (not during ranking).

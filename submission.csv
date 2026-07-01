@@ -1,101 +1,567 @@
 candidate_id,rank,score,reasoning
-CAND_0071974,1,0.8621,"Senior AI Engineer with 7.8y experience; skills include LoRA, Learning to Rank, PEFT; last active 75d ago; GitHub score 82.8"
-CAND_0018499,2,0.8522,"Senior Machine Learning Engineer with 7.2y experience; skills include Diffusion Models, Pinecone, Information Retrieval; last active 48d ago; GitHub score 94.8; based in Noida, Uttar Pradesh"
-CAND_0086022,3,0.8482,"Senior Applied Scientist with 5.3y experience; skills include Vector Search, MLflow, Recommendation Systems; last active 76d ago; GitHub score 75.2; willing to relocate"
-CAND_0033861,4,0.8454,"Senior NLP Engineer with 8.0y experience; skills include Reinforcement Learning, LoRA, Machine Learning; inactive for 4 months; GitHub score 32.6"
-CAND_0011687,5,0.8441,"Senior NLP Engineer with 7.8y experience; skills include FAISS, Feature Engineering, MLOps; last active 51d ago; GitHub score 76.3"
-CAND_0094759,6,0.8433,"Lead AI Engineer with 8.6y experience; skills include scikit-learn, Learning to Rank, Qdrant; inactive for 5 months; GitHub score 76.2; based in Mumbai, Maharashtra"
-CAND_0088025,7,0.8395,"Staff Machine Learning Engineer with 8.6y experience; skills include Pinecone, LoRA, Prompt Engineering; last active 47d ago; GitHub score 74.6"
-CAND_0077337,8,0.8348,"Staff Machine Learning Engineer with 7.0y experience; skills include GANs, Semantic Search, Pinecone; last active 35d ago; GitHub score 68.0; willing to relocate"
-CAND_0008425,9,0.8334,"Senior NLP Engineer with 7.8y experience; skills include Weights & Biases, TensorFlow, Prompt Engineering; last active 66d ago; GitHub score 53.3"
-CAND_0002025,10,0.8288,"Senior AI Engineer with 5.9y experience; skills include Diffusion Models, OpenSearch, Weaviate; last active 35d ago; GitHub score 96.9"
-CAND_0046064,11,0.8266,"Senior NLP Engineer with 8.9y experience; skills include Image Classification, OpenCV, Six Sigma; last active 65d ago; GitHub score 67.3"
-CAND_0081846,12,0.8255,"Lead AI Engineer with 6.7y experience; skills include Data Science, LlamaIndex, pgvector; last active 58d ago; GitHub score 33.7; willing to relocate"
-CAND_0005260,13,0.8244,"Senior NLP Engineer with 5.2y experience; skills include Statistical Modeling, MLOps, Prompt Engineering; last active 51d ago; based in Chennai, Tamil Nadu"
-CAND_0046525,14,0.8203,"Senior Machine Learning Engineer with 6.1y experience; skills include Elasticsearch, LangChain, Information Retrieval; last active 38d ago; GitHub score 36.7; based in Pune, Maharashtra"
-CAND_0041611,15,0.8149,"Staff Machine Learning Engineer with 6.4y experience; skills include LlamaIndex, Weaviate, GANs; inactive for 6 months; willing to relocate"
-CAND_0039754,16,0.8144,"Senior Applied Scientist with 16.2y experience; skills include LlamaIndex, Reinforcement Learning, Statistical Modeling; last active 47d ago; GitHub score 77.5; willing to relocate"
-CAND_0055905,17,0.8036,"Senior Machine Learning Engineer with 8.1y experience; skills include ASR, Hugging Face Transformers, Haystack; last active 44d ago"
-CAND_0092278,18,0.7943,"Senior NLP Engineer with 6.8y experience; skills include TensorFlow, Vector Search, Object Detection; inactive for 7 months; based in Pune, Maharashtra"
-CAND_0007411,19,0.7861,"Senior Machine Learning Engineer with 8.0y experience; skills include Fine-tuning LLMs, Vector Search, Data Science; inactive for 7 months; GitHub score 89.5; willing to relocate"
-CAND_0006557,20,0.7592,"NLP Engineer with 7.9y experience; skills include Kubeflow, Data Science, Elasticsearch; last active 81d ago; willing to relocate"
-CAND_0030468,21,0.7586,"Senior Applied Scientist with 5.4y experience; skills include Information Retrieval Systems, TensorFlow, CNN; last active 58d ago; GitHub score 45.0; willing to relocate"
-CAND_0080766,22,0.7557,"Staff Machine Learning Engineer with 8.8y experience; skills include Vue.js, Tally, MLOps; last active 82d ago; GitHub score 32.9; willing to relocate. Concern: not marked open to work"
-CAND_0037944,23,0.7554,"Senior Data Scientist with 4.9y experience; skills include Next.js, Feature Engineering, ASR; inactive for 3 months; GitHub score 83.0"
-CAND_0060072,24,0.7491,"Staff Machine Learning Engineer with 5.7y experience; skills include Deep Learning, PyTorch, Feature Engineering; inactive for 5 months; GitHub score 82.4; willing to relocate. Concern: not marked open to work"
-CAND_0005538,25,0.7461,"Senior AI Engineer with 5.9y experience; skills include Project Management, Content Matching, Apache Flink; last active 44d ago; GitHub score 58.0"
-CAND_0042029,26,0.7402,"Senior Data Scientist with 6.5y experience; skills include YOLO, Statistical Modeling, Elasticsearch; last active 78d ago; GitHub score 78.7; based in Delhi, Delhi. Concern: not marked open to work"
-CAND_0055992,27,0.7357,"AI Engineer with 16.9y experience; skills include MLflow, RAG, Feature Engineering; inactive for 3 months; GitHub score 65.3; willing to relocate"
-CAND_0068351,28,0.7343,"Lead AI Engineer with 6.4y experience; skills include Feature Engineering, Redis, Ranking Systems; last active 80d ago; based in Delhi, Delhi. Concern: not marked open to work"
-CAND_0006418,29,0.7342,"Machine Learning Engineer with 5.7y experience; skills include Kubernetes, gRPC, TensorFlow; inactive for 3 months; GitHub score 59.7; based in Gurgaon, Haryana"
-CAND_0070202,30,0.7310,"Machine Learning Engineer with 5.1y experience; skills include Microservices, Object Detection, OpenCV; last active 41d ago. Concern: not marked open to work"
-CAND_0095528,31,0.7304,"Senior Data Scientist with 5.3y experience; skills include Feature Engineering, OpenSearch, GANs; last active 58d ago"
-CAND_0070398,32,0.7296,"Machine Learning Engineer with 7.2y experience; skills include Image Classification, Data Science, Object Detection; last active 77d ago; GitHub score 63.1; willing to relocate. Concern: notice period 120d"
-CAND_0044222,33,0.7295,"AI Engineer with 7.7y experience; skills include Vector Search, Java, Qdrant; last active 46d ago; GitHub score 28.9"
-CAND_0044855,34,0.7278,"Senior Data Scientist with 6.6y experience; skills include Object Detection, Hugging Face Transformers, BentoML; last active 67d ago; GitHub score 46.7; willing to relocate. Concern: not marked open to work"
-CAND_0099806,35,0.7267,"AI Engineer with 4.6y experience; skills include OpenCV, Statistical Modeling, RAG; last active 56d ago; GitHub score 86.9; willing to relocate"
-CAND_0006567,36,0.7252,"Senior AI Engineer with 7.9y experience; skills include Speech Recognition, Search Backend, Vector Representations; last active 58d ago; GitHub score 35.2; based in Noida, Uttar Pradesh"
-CAND_0066376,37,0.7236,"Applied ML Engineer with 5.7y experience; skills include Recommendation Systems, Fine-tuning LLMs, Reinforcement Learning; last active 58d ago; based in Mumbai, Maharashtra"
-CAND_0093912,38,0.7224,"Senior Data Scientist with 5.3y experience; skills include Feature Engineering, CNN, Recommendation Systems; last active 50d ago; GitHub score 81.5"
-CAND_0093193,39,0.7195,"Senior Machine Learning Engineer with 7.9y experience; skills include Forecasting, Qdrant, Open-source ML libraries; last active 73d ago; GitHub score 34.2; based in Bangalore, Karnataka"
-CAND_0028793,40,0.7181,"Search Engineer with 7.2y experience; skills include SAP, Kubeflow, YOLO; last active 78d ago; GitHub score 83.1; willing to relocate. Concern: notice period 120d"
-CAND_0037980,41,0.7168,"Senior Applied Scientist with 9.0y experience; skills include TTS, OpenCV, QLoRA; inactive for 3 months; GitHub score 30.8; willing to relocate"
-CAND_0005649,42,0.7163,"Senior Data Scientist with 7.4y experience; skills include Prompt Engineering, Object Detection, TensorFlow; last active 77d ago; GitHub score 80.7; based in Delhi, Delhi"
-CAND_0041669,43,0.7159,"Recommendation Systems Engineer with 8.0y experience; skills include FAISS, Diffusion Models, MLflow; last active 85d ago; GitHub score 70.9; based in Noida, Uttar Pradesh"
-CAND_0030031,44,0.7101,"AI Engineer with 5.7y experience; skills include Information Retrieval, PyTorch, Object Detection; last active 39d ago; GitHub score 32.4. Concern: not marked open to work"
-CAND_0083307,45,0.7063,"Search Engineer with 7.8y experience; skills include OpenCV, scikit-learn, Image Classification; inactive for 3 months; GitHub score 69.2. Concern: notice period 120d"
-CAND_0049538,46,0.7046,"Applied ML Engineer with 5.8y experience; skills include Feature Engineering, MLflow, Computer Vision; last active 34d ago; GitHub score 90.8. Concern: not marked open to work"
-CAND_0091909,47,0.7019,"Machine Learning Engineer with 6.9y experience; skills include Image Classification, Diffusion Models, Qdrant; inactive for 3 months; GitHub score 49.7; based in Bangalore, Karnataka"
-CAND_0045250,48,0.7016,"Applied ML Engineer with 6.6y experience; skills include Milvus, LoRA, Time Series; last active 62d ago; based in Delhi, Delhi. Concern: not marked open to work"
-CAND_0011162,49,0.7004,"Recommendation Systems Engineer with 5.8y experience; skills include Weights & Biases, CNN, Milvus; last active 51d ago; GitHub score 34.3; willing to relocate"
-CAND_0054123,50,0.6993,"Applied ML Engineer with 4.7y experience; skills include Python, Vector Search, Hugging Face Transformers; last active 53d ago; GitHub score 71.5; based in Gurgaon, Haryana. Concern: not marked open to work"
-CAND_0062247,51,0.6989,"AI Engineer with 7.3y experience; skills include Image Classification, OpenCV, Reinforcement Learning; last active 68d ago; GitHub score 52.7; willing to relocate"
-CAND_0092245,52,0.6989,"Senior Data Scientist with 4.1y experience; skills include Forecasting, Embeddings, Statistical Modeling; inactive for 3 months"
-CAND_0026532,53,0.6986,"Recommendation Systems Engineer with 4.8y experience; skills include Prompt Engineering, Time Series, pgvector; inactive for 3 months; GitHub score 32.5; based in Chennai, Tamil Nadu"
-CAND_0060054,54,0.6963,"AI Engineer with 6.4y experience; skills include Diffusion Models, Weaviate, FAISS; inactive for 3 months; willing to relocate. Concern: not marked open to work"
-CAND_0099401,55,0.6962,"NLP Engineer with 7.7y experience; skills include BM25, ASR, Deep Learning; last active 34d ago; GitHub score 24.1; willing to relocate. Concern: not marked open to work"
-CAND_0074225,56,0.6959,"Machine Learning Engineer with 4.3y experience; skills include Apache Beam, Statistical Modeling, Recommendation Systems; last active 41d ago; GitHub score 54.3; willing to relocate. Concern: notice period 120d"
-CAND_0044883,57,0.6948,"AI Engineer with 6.3y experience; skills include CNN, Computer Vision, Embeddings; last active 54d ago; GitHub score 70.5; willing to relocate. Concern: not marked open to work"
-CAND_0086151,58,0.6911,"Recommendation Systems Engineer with 7.7y experience; skills include Figma, BentoML, Data Science; inactive for 3 months; GitHub score 51.7; willing to relocate. Concern: notice period 120d"
-CAND_0027691,59,0.6907,"NLP Engineer with 6.5y experience; skills include PEFT, Statistical Modeling, scikit-learn; inactive for 3 months; GitHub score 58.5; based in Pune, Maharashtra"
-CAND_0081053,60,0.6880,"NLP Engineer with 5.4y experience; skills include Qdrant, Diffusion Models, OpenCV; inactive for 3 months; GitHub score 77.7; willing to relocate"
-CAND_0061265,61,0.6878,"Recommendation Systems Engineer with 6.6y experience; skills include Vector Search, Time Series, Object Detection; inactive for 3 months; GitHub score 79.8; based in Delhi, Delhi. Concern: notice period 120d"
-CAND_0064904,62,0.6870,"AI Engineer with 4.9y experience; skills include Hugging Face Transformers, Diffusion Models, Forecasting; inactive for 3 months; GitHub score 59.0; based in Hyderabad, Telangana"
-CAND_0064326,63,0.6850,"Search Engineer with 7.6y experience; skills include scikit-learn, Milvus, Semantic Search; last active 40d ago; GitHub score 61.4; based in Gurgaon, Haryana"
-CAND_0041568,64,0.6833,"Search Engineer with 5.2y experience; skills include Angular, Feature Engineering, GANs; last active 85d ago"
-CAND_0079387,65,0.6828,"AI Engineer with 6.9y experience; skills include Recommendation Systems, Time Series, JavaScript; last active 66d ago; GitHub score 64.1"
-CAND_0096142,66,0.6828,"Applied ML Engineer with 5.0y experience; skills include Kubeflow, LoRA, Weaviate; last active 40d ago; GitHub score 80.5; based in Hyderabad, Telangana. Concern: notice period 120d"
-CAND_0041610,67,0.6827,"Recommendation Systems Engineer with 6.7y experience; skills include OpenCV, LoRA, Statistical Modeling; last active 47d ago; GitHub score 52.1; willing to relocate"
-CAND_0057563,68,0.6821,"NLP Engineer with 6.8y experience; skills include Speech Recognition, Rust, Feature Engineering; last active 70d ago; GitHub score 22.8; willing to relocate. Concern: not marked open to work"
-CAND_0013536,69,0.6818,"Applied ML Engineer with 14.1y experience; skills include PyTorch, LLMs, NLP; last active 63d ago; GitHub score 51.8"
-CAND_0061257,70,0.6818,"Staff Machine Learning Engineer with 8.0y experience; skills include PEFT, Haystack, Time Series; last active 75d ago; GitHub score 45.3; based in Noida, Uttar Pradesh"
-CAND_0075439,71,0.6813,"Machine Learning Engineer with 4.3y experience; skills include Feature Engineering, LoRA, JavaScript; last active 54d ago; GitHub score 66.3. Concern: not marked open to work"
-CAND_0051630,72,0.6812,"Machine Learning Engineer with 6.0y experience; skills include Hugging Face Transformers, BentoML, MLflow; last active 87d ago; GitHub score 66.4. Concern: not marked open to work"
-CAND_0018549,73,0.6810,"Recommendation Systems Engineer with 6.8y experience; skills include Computer Vision, Kubernetes, BigQuery; last active 63d ago; GitHub score 56.3; willing to relocate"
-CAND_0075249,74,0.6808,"Applied ML Engineer with 6.2y experience; skills include MLflow, Time Series, Diffusion Models; last active 82d ago; GitHub score 36.8"
-CAND_0030953,75,0.6803,"Search Engineer with 7.8y experience; skills include TTS, MLOps, Learning to Rank; last active 80d ago; GitHub score 21.0; based in Chennai, Tamil Nadu. Concern: not marked open to work"
-CAND_0051004,76,0.6783,"Senior Data Scientist with 4.7y experience; skills include MLflow, Embeddings, Semantic Search; last active 56d ago; GitHub score 30.8; based in Delhi, Delhi"
-CAND_0068811,77,0.6778,"Applied ML Engineer with 8.0y experience; skills include Data Science, Speech Recognition, TTS; last active 40d ago; GitHub score 23.1; based in Pune, Maharashtra"
-CAND_0052682,78,0.6773,"NLP Engineer with 6.6y experience; skills include Statistical Modeling, gRPC, TTS; inactive for 3 months; GitHub score 72.4"
-CAND_0050454,79,0.6768,"AI Engineer with 6.8y experience; skills include Qdrant, Image Classification, Feature Engineering; last active 64d ago; based in Delhi, Delhi"
-CAND_0079284,80,0.6766,"Machine Learning Engineer with 4.9y experience; skills include scikit-learn, QLoRA, Illustrator; last active 80d ago; based in Hyderabad, Telangana. Concern: not marked open to work"
-CAND_0012957,81,0.6755,"Search Engineer with 4.9y experience; skills include PEFT, ASR, Deep Learning; last active 59d ago; GitHub score 53.5; based in Chennai, Tamil Nadu. Concern: notice period 120d, not marked open to work"
-CAND_0069905,82,0.6745,"Applied ML Engineer with 6.6y experience; skills include Redux, Computer Vision, Speech Recognition; last active 70d ago; GitHub score 44.8; willing to relocate"
-CAND_0052328,83,0.6742,"Recommendation Systems Engineer with 6.5y experience; skills include Object Detection, LoRA, Reinforcement Learning; inactive for 3 months; GitHub score 77.6; based in Pune, Maharashtra"
-CAND_0007460,84,0.6721,"AI Engineer with 4.7y experience; skills include Embeddings, PostgreSQL, Information Retrieval; last active 40d ago; GitHub score 53.2; based in Pune, Maharashtra. Concern: notice period 120d"
-CAND_0053591,85,0.6721,"AI Engineer with 5.3y experience; skills include LangChain, Reinforcement Learning, Embeddings; last active 44d ago; GitHub score 75.8"
-CAND_0061655,86,0.6708,"Machine Learning Engineer with 4.6y experience; skills include Haystack, Time Series, PyTorch; last active 40d ago; GitHub score 56.5. Concern: not marked open to work"
-CAND_0096172,87,0.6705,"NLP Engineer with 5.2y experience; skills include Haystack, Forecasting, CNN; last active 58d ago; GitHub score 65.0; based in Chennai, Tamil Nadu. Concern: not marked open to work"
-CAND_0076904,88,0.6691,"Senior Data Scientist with 4.2y experience; skills include CNN, BentoML, ASR; last active 70d ago"
-CAND_0007009,89,0.6683,"Recommendation Systems Engineer with 7.9y experience; skills include Statistical Modeling, ETL, CNN; inactive for 3 months; GitHub score 69.2; based in Noida, Uttar Pradesh"
-CAND_0065878,90,0.6680,"Senior Data Scientist with 7.8y experience; skills include RAG, Computer Vision, pgvector; inactive for 3 months"
-CAND_0037566,91,0.6676,"Machine Learning Engineer with 6.9y experience; skills include Time Series, NLP, LoRA; last active 71d ago; GitHub score 73.4; based in Bangalore, Karnataka"
-CAND_0039383,92,0.6673,"Applied ML Engineer with 7.1y experience; skills include GANs, ASR, Kubeflow; inactive for 3 months; GitHub score 86.4; based in Gurgaon, Haryana"
-CAND_0024620,93,0.6669,"AI Engineer with 5.9y experience; skills include Statistical Modeling, Object Detection, Semantic Search; last active 79d ago; GitHub score 33.3; willing to relocate"
-CAND_0087630,94,0.6667,"AI Engineer with 7.2y experience; skills include Data Science, GANs, ASR; inactive for 3 months; GitHub score 23.2; based in Gurgaon, Haryana. Concern: not marked open to work"
-CAND_0078002,95,0.6664,"Machine Learning Engineer with 6.3y experience; skills include Statistical Modeling, Flask, BentoML; last active 70d ago; GitHub score 50.6"
-CAND_0010257,96,0.6661,"Senior Data Scientist with 6.5y experience; skills include MLflow, Forecasting, OpenSearch; last active 48d ago; GitHub score 45.5; based in Noida, Uttar Pradesh. Concern: notice period 120d"
-CAND_0079064,97,0.6657,"Senior Data Scientist with 5.2y experience; skills include NLP, ASR, Node.js; last active 78d ago; GitHub score 26.8; based in Noida, Uttar Pradesh. Concern: notice period 120d"
-CAND_0077285,98,0.6655,"Recommendation Systems Engineer with 5.5y experience; skills include OpenCV, Excel, Reinforcement Learning; last active 58d ago; GitHub score 75.6"
-CAND_0029367,99,0.6653,"Senior Data Scientist with 5.7y experience; skills include GANs, Haystack, BentoML; last active 41d ago; GitHub score 39.8; based in Bangalore, Karnataka"
-CAND_0074735,100,0.6650,"Applied ML Engineer with 5.5y experience; skills include YOLO, Weaviate, GANs; inactive for 3 months; GitHub score 87.7"
+CAND_0071974,1,0.8621,"[FIT] **Perfect Role Fit**: Senior AI Engineer with 7.8y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[FIT] **Production Ready**: Proven experience shipping real-world ML systems rather than pure research.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.54) | Exp (1.00) | Title (1.00) | Prod (0.80) | Behav (0.90)_"
+CAND_0018499,2,0.8522,"[FIT] **Perfect Role Fit**: Senior Machine Learning Engineer with 7.2y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 83/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.46) | Exp (1.00) | Title (1.00) | Prod (0.68) | Behav (0.91)_"
+CAND_0086022,3,0.8482,"[FIT] **Perfect Role Fit**: Senior Applied Scientist with 5.3y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 84/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.58) | Exp (1.00) | Title (1.00) | Prod (0.62) | Behav (0.83)_"
+CAND_0033861,4,0.8454,"[FIT] **Perfect Role Fit**: Senior NLP Engineer with 8.0y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[FIT] **Production Ready**: Proven experience shipping real-world ML systems rather than pure research.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.53) | Exp (1.00) | Title (1.00) | Prod (0.80) | Behav (0.68)_"
+CAND_0011687,5,0.8441,"[FIT] **Perfect Role Fit**: Senior NLP Engineer with 7.8y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.34) | Exp (1.00) | Title (1.00) | Prod (0.68) | Behav (0.89)_"
+CAND_0094759,6,0.8433,"[FIT] **Perfect Role Fit**: Lead AI Engineer with 8.6y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.50) | Exp (1.00) | Title (1.00) | Prod (0.62) | Behav (0.65)_"
+CAND_0088025,7,0.8395,"[FIT] **Perfect Role Fit**: Staff Machine Learning Engineer with 8.6y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 90/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.53) | Exp (1.00) | Title (1.00) | Prod (0.62) | Behav (0.90)_"
+CAND_0077337,8,0.8348,"[FIT] **Perfect Role Fit**: Staff Machine Learning Engineer with 7.0y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.64) | Exp (1.00) | Title (1.00) | Prod (0.42) | Behav (0.90)_"
+CAND_0008425,9,0.8333,"[FIT] **Perfect Role Fit**: Senior NLP Engineer with 7.8y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.53) | Exp (1.00) | Title (1.00) | Prod (0.68) | Behav (0.84)_"
+CAND_0002025,10,0.8288,"[FIT] **Perfect Role Fit**: Senior AI Engineer with 5.9y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[FIT] **Production Ready**: Proven experience shipping real-world ML systems rather than pure research.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.59) | Exp (1.00) | Title (1.00) | Prod (0.80) | Behav (0.90)_"
+CAND_0046064,11,0.8266,"[FIT] **Perfect Role Fit**: Senior NLP Engineer with 8.9y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.34) | Exp (1.00) | Title (1.00) | Prod (0.68) | Behav (0.88)_"
+CAND_0081846,12,0.8255,"[FIT] **Perfect Role Fit**: Lead AI Engineer with 6.7y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.60) | Exp (1.00) | Title (1.00) | Prod (0.62) | Behav (0.94)_"
+CAND_0005260,13,0.8244,"[FIT] **Perfect Role Fit**: Senior NLP Engineer with 5.2y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[FIT] **Production Ready**: Proven experience shipping real-world ML systems rather than pure research.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 81/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.52) | Exp (1.00) | Title (1.00) | Prod (0.80) | Behav (0.83)_"
+CAND_0046525,14,0.8203,"[FIT] **Perfect Role Fit**: Senior Machine Learning Engineer with 6.1y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 85/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.43) | Exp (1.00) | Title (1.00) | Prod (0.62) | Behav (0.87)_"
+CAND_0041611,15,0.8149,"[FIT] **Perfect Role Fit**: Staff Machine Learning Engineer with 6.4y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **High Assessment**: Averaged 94/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.55) | Exp (1.00) | Title (1.00) | Prod (0.62) | Behav (0.55)_"
+CAND_0039754,16,0.8144,"[FIT] **Solid Fit**: Senior Applied Scientist with 16.2y experience.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.60) | Exp (0.55) | Title (1.00) | Prod (0.62) | Behav (0.87)_"
+CAND_0055905,17,0.8035,"[FIT] **Perfect Role Fit**: Senior Machine Learning Engineer with 8.1y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.50) | Exp (1.00) | Title (1.00) | Prod (0.68) | Behav (0.88)_"
+CAND_0092278,18,0.7942,"[FIT] **Perfect Role Fit**: Senior NLP Engineer with 6.8y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.52) | Exp (1.00) | Title (1.00) | Prod (0.68) | Behav (0.55)_"
+CAND_0007411,19,0.7861,"[FIT] **Perfect Role Fit**: Senior Machine Learning Engineer with 8.0y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.48) | Exp (1.00) | Title (1.00) | Prod (0.68) | Behav (0.61)_"
+CAND_0006557,20,0.7592,"[FIT] **Perfect Role Fit**: NLP Engineer with 7.9y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.51) | Exp (1.00) | Title (1.00) | Prod (0.33) | Behav (0.82)_"
+CAND_0030468,21,0.7585,"[FIT] **Perfect Role Fit**: Senior Applied Scientist with 5.4y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 83/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.36) | Exp (1.00) | Title (1.00) | Prod (0.55) | Behav (0.89)_"
+CAND_0080766,22,0.7557,"[FIT] **Perfect Role Fit**: Staff Machine Learning Engineer with 8.8y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 84/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.37) | Exp (1.00) | Title (1.00) | Prod (0.45) | Behav (0.82)_"
+CAND_0037944,23,0.7554,"[FIT] **Perfect Role Fit**: Senior Data Scientist with 4.9y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 84/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.48) | Exp (0.82) | Title (1.00) | Prod (0.30) | Behav (0.85)_"
+CAND_0060072,24,0.7491,"[FIT] **Perfect Role Fit**: Staff Machine Learning Engineer with 5.7y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.53) | Exp (1.00) | Title (1.00) | Prod (0.42) | Behav (0.62)_"
+CAND_0005538,25,0.7460,"[FIT] **Perfect Role Fit**: Senior AI Engineer with 5.9y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 93/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.30) | Exp (1.00) | Title (1.00) | Prod (0.45) | Behav (0.92)_"
+CAND_0042029,26,0.7402,"[FIT] **Perfect Role Fit**: Senior Data Scientist with 6.5y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.46) | Exp (1.00) | Title (1.00) | Prod (0.20) | Behav (0.78)_"
+CAND_0055992,27,0.7357,"[FIT] **Solid Fit**: AI Engineer with 16.9y experience.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.55) | Exp (0.55) | Title (1.00) | Prod (0.20) | Behav (0.85)_"
+CAND_0068351,28,0.7343,"[FIT] **Perfect Role Fit**: Lead AI Engineer with 6.4y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.54) | Exp (1.00) | Title (1.00) | Prod (0.33) | Behav (0.75)_"
+CAND_0006418,29,0.7342,"[FIT] **Perfect Role Fit**: Machine Learning Engineer with 5.7y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 89/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.37) | Exp (1.00) | Title (1.00) | Prod (0.20) | Behav (0.83)_"
+CAND_0070202,30,0.7310,"[FIT] **Perfect Role Fit**: Machine Learning Engineer with 5.1y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.50) | Exp (1.00) | Title (1.00) | Prod (0.20) | Behav (0.72)_"
+CAND_0095528,31,0.7304,"[FIT] **Perfect Role Fit**: Senior Data Scientist with 5.3y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.52) | Exp (1.00) | Title (1.00) | Prod (0.20) | Behav (0.77)_"
+CAND_0070398,32,0.7296,"[FIT] **Perfect Role Fit**: Machine Learning Engineer with 7.2y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.56) | Exp (1.00) | Title (1.00) | Prod (0.17) | Behav (0.80)_"
+CAND_0044222,33,0.7294,"[FIT] **Perfect Role Fit**: AI Engineer with 7.7y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.44) | Exp (1.00) | Title (1.00) | Prod (0.08) | Behav (0.85)_"
+CAND_0044855,34,0.7278,"[FIT] **Perfect Role Fit**: Senior Data Scientist with 6.6y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.55) | Exp (1.00) | Title (1.00) | Prod (0.20) | Behav (0.78)_"
+CAND_0099806,35,0.7267,"[FIT] **Perfect Role Fit**: AI Engineer with 4.6y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.39) | Exp (0.82) | Title (1.00) | Prod (0.17) | Behav (0.85)_"
+CAND_0006567,36,0.7252,"[FIT] **Perfect Role Fit**: Senior AI Engineer with 7.9y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.23) | Exp (1.00) | Title (1.00) | Prod (0.33) | Behav (0.86)_"
+CAND_0066376,37,0.7235,"[FIT] **Perfect Role Fit**: Applied ML Engineer with 5.7y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.51) | Exp (1.00) | Title (1.00) | Prod (0.20) | Behav (0.77)_"
+CAND_0093912,38,0.7224,"[FIT] **Perfect Role Fit**: Senior Data Scientist with 5.3y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.30) | Exp (1.00) | Title (1.00) | Prod (0.20) | Behav (0.89)_"
+CAND_0093193,39,0.7194,"[FIT] **Perfect Role Fit**: Senior Machine Learning Engineer with 7.9y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.36) | Exp (1.00) | Title (1.00) | Prod (0.17) | Behav (0.86)_"
+CAND_0028793,40,0.7181,"[GAP] **Title Mismatch**: Current role 'Search Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 80/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.33) | Exp (1.00) | Title (0.40) | Prod (0.20) | Behav (0.89)_"
+CAND_0037980,41,0.7168,"[FIT] **Perfect Role Fit**: Senior Applied Scientist with 9.0y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.37) | Exp (1.00) | Title (1.00) | Prod (0.55) | Behav (0.83)_"
+CAND_0005649,42,0.7163,"[FIT] **Perfect Role Fit**: Senior Data Scientist with 7.4y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.53) | Exp (1.00) | Title (1.00) | Prod (0.30) | Behav (0.77)_"
+CAND_0041669,43,0.7159,"[GAP] **Title Mismatch**: Current role 'Recommendation Systems Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.44) | Exp (1.00) | Title (0.40) | Prod (0.33) | Behav (0.85)_"
+CAND_0030031,44,0.7101,"[FIT] **Perfect Role Fit**: AI Engineer with 5.7y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.45) | Exp (1.00) | Title (1.00) | Prod (0.33) | Behav (0.85)_"
+CAND_0083307,45,0.7062,"[GAP] **Title Mismatch**: Current role 'Search Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.46) | Exp (1.00) | Title (0.40) | Prod (0.20) | Behav (0.84)_"
+CAND_0049538,46,0.7046,"[FIT] **Perfect Role Fit**: Applied ML Engineer with 5.8y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.53) | Exp (1.00) | Title (1.00) | Prod (0.08) | Behav (0.69)_"
+CAND_0091909,47,0.7019,"[FIT] **Perfect Role Fit**: Machine Learning Engineer with 6.9y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 87/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.36) | Exp (1.00) | Title (1.00) | Prod (0.33) | Behav (0.75)_"
+CAND_0045250,48,0.7016,"[FIT] **Perfect Role Fit**: Applied ML Engineer with 6.6y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+
+_**Score Breakdown:** Skills (0.45) | Exp (1.00) | Title (1.00) | Prod (0.30) | Behav (0.76)_"
+CAND_0011162,49,0.7004,"[GAP] **Title Mismatch**: Current role 'Recommendation Systems Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.51) | Exp (1.00) | Title (0.40) | Prod (0.20) | Behav (0.88)_"
+CAND_0054123,50,0.6993,"[FIT] **Perfect Role Fit**: Applied ML Engineer with 4.7y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.43) | Exp (0.82) | Title (1.00) | Prod (0.20) | Behav (0.76)_"
+CAND_0062247,51,0.6989,"[FIT] **Perfect Role Fit**: AI Engineer with 7.3y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.42) | Exp (1.00) | Title (1.00) | Prod (0.08) | Behav (0.82)_"
+CAND_0092245,52,0.6989,"[FIT] **Perfect Role Fit**: Senior Data Scientist with 4.1y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.51) | Exp (0.82) | Title (1.00) | Prod (0.17) | Behav (0.79)_"
+CAND_0026532,53,0.6986,"[GAP] **Title Mismatch**: Current role 'Recommendation Systems Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.43) | Exp (0.82) | Title (0.40) | Prod (0.33) | Behav (0.78)_"
+CAND_0060054,54,0.6963,"[FIT] **Perfect Role Fit**: AI Engineer with 6.4y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 90/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.26) | Exp (1.00) | Title (1.00) | Prod (0.33) | Behav (0.70)_"
+CAND_0099401,55,0.6962,"[FIT] **Perfect Role Fit**: NLP Engineer with 7.7y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.37) | Exp (1.00) | Title (1.00) | Prod (0.20) | Behav (0.71)_"
+CAND_0074225,56,0.6959,"[FIT] **Perfect Role Fit**: Machine Learning Engineer with 4.3y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.47) | Exp (0.82) | Title (1.00) | Prod (0.30) | Behav (0.92)_"
+CAND_0044883,57,0.6948,"[FIT] **Perfect Role Fit**: AI Engineer with 6.3y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+
+_**Score Breakdown:** Skills (0.37) | Exp (1.00) | Title (1.00) | Prod (0.30) | Behav (0.74)_"
+CAND_0086151,58,0.6911,"[GAP] **Title Mismatch**: Current role 'Recommendation Systems Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+
+_**Score Breakdown:** Skills (0.37) | Exp (1.00) | Title (0.40) | Prod (0.20) | Behav (0.81)_"
+CAND_0027691,59,0.6907,"[FIT] **Perfect Role Fit**: NLP Engineer with 6.5y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.34) | Exp (1.00) | Title (1.00) | Prod (0.08) | Behav (0.79)_"
+CAND_0081053,60,0.6880,"[FIT] **Perfect Role Fit**: NLP Engineer with 5.4y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 86/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.38) | Exp (1.00) | Title (1.00) | Prod (0.20) | Behav (0.81)_"
+CAND_0061265,61,0.6878,"[GAP] **Title Mismatch**: Current role 'Recommendation Systems Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.31) | Exp (1.00) | Title (0.40) | Prod (0.08) | Behav (0.79)_"
+CAND_0064904,62,0.6870,"[FIT] **Perfect Role Fit**: AI Engineer with 4.9y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.45) | Exp (0.82) | Title (1.00) | Prod (0.20) | Behav (0.82)_"
+CAND_0064326,63,0.6850,"[GAP] **Title Mismatch**: Current role 'Search Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.41) | Exp (1.00) | Title (0.40) | Prod (0.20) | Behav (0.88)_"
+CAND_0041568,64,0.6833,"[GAP] **Title Mismatch**: Current role 'Search Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.41) | Exp (1.00) | Title (0.40) | Prod (0.20) | Behav (0.76)_"
+CAND_0079387,65,0.6828,"[FIT] **Perfect Role Fit**: AI Engineer with 6.9y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.32) | Exp (1.00) | Title (1.00) | Prod (0.20) | Behav (0.88)_"
+CAND_0096142,66,0.6828,"[FIT] **Perfect Role Fit**: Applied ML Engineer with 5.0y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 86/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.32) | Exp (1.00) | Title (1.00) | Prod (0.33) | Behav (0.86)_"
+CAND_0041610,67,0.6827,"[GAP] **Title Mismatch**: Current role 'Recommendation Systems Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.38) | Exp (1.00) | Title (0.40) | Prod (0.08) | Behav (0.87)_"
+CAND_0057563,68,0.6821,"[FIT] **Perfect Role Fit**: NLP Engineer with 6.8y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 81/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.37) | Exp (1.00) | Title (1.00) | Prod (0.20) | Behav (0.77)_"
+CAND_0061257,69,0.6818,"[FIT] **Perfect Role Fit**: Staff Machine Learning Engineer with 8.0y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.30) | Exp (1.00) | Title (1.00) | Prod (0.33) | Behav (0.90)_"
+CAND_0013536,70,0.6817,"[FIT] **Solid Fit**: Applied ML Engineer with 14.1y experience.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+
+_**Score Breakdown:** Skills (0.51) | Exp (0.55) | Title (1.00) | Prod (0.17) | Behav (0.80)_"
+CAND_0075439,71,0.6813,"[FIT] **Perfect Role Fit**: Machine Learning Engineer with 4.3y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.38) | Exp (0.82) | Title (1.00) | Prod (0.33) | Behav (0.82)_"
+CAND_0051630,72,0.6812,"[FIT] **Perfect Role Fit**: Machine Learning Engineer with 6.0y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.56) | Exp (1.00) | Title (1.00) | Prod (0.08) | Behav (0.67)_"
+CAND_0018549,73,0.6810,"[GAP] **Title Mismatch**: Current role 'Recommendation Systems Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.40) | Exp (1.00) | Title (0.40) | Prod (0.20) | Behav (0.87)_"
+CAND_0075249,74,0.6808,"[FIT] **Perfect Role Fit**: Applied ML Engineer with 6.2y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.33) | Exp (1.00) | Title (1.00) | Prod (0.20) | Behav (0.81)_"
+CAND_0030953,75,0.6803,"[GAP] **Title Mismatch**: Current role 'Search Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.28) | Exp (1.00) | Title (0.40) | Prod (0.33) | Behav (0.75)_"
+CAND_0051004,76,0.6783,"[FIT] **Perfect Role Fit**: Senior Data Scientist with 4.7y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.42) | Exp (0.82) | Title (1.00) | Prod (0.17) | Behav (0.81)_"
+CAND_0068811,77,0.6778,"[FIT] **Perfect Role Fit**: Applied ML Engineer with 8.0y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.33) | Exp (1.00) | Title (1.00) | Prod (0.20) | Behav (0.78)_"
+CAND_0052682,78,0.6773,"[FIT] **Perfect Role Fit**: NLP Engineer with 6.6y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.43) | Exp (1.00) | Title (1.00) | Prod (0.20) | Behav (0.91)_"
+CAND_0050454,79,0.6768,"[FIT] **Perfect Role Fit**: AI Engineer with 6.8y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.35) | Exp (1.00) | Title (1.00) | Prod (0.08) | Behav (0.84)_"
+CAND_0079284,80,0.6766,"[FIT] **Perfect Role Fit**: Machine Learning Engineer with 4.9y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.44) | Exp (0.82) | Title (1.00) | Prod (0.33) | Behav (0.78)_"
+CAND_0012957,81,0.6755,"[GAP] **Title Mismatch**: Current role 'Search Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.38) | Exp (0.82) | Title (0.40) | Prod (0.20) | Behav (0.77)_"
+CAND_0069905,82,0.6745,"[FIT] **Perfect Role Fit**: Applied ML Engineer with 6.6y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.24) | Exp (1.00) | Title (1.00) | Prod (0.17) | Behav (0.86)_"
+CAND_0052328,83,0.6741,"[GAP] **Title Mismatch**: Current role 'Recommendation Systems Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.41) | Exp (1.00) | Title (0.40) | Prod (0.17) | Behav (0.79)_"
+CAND_0007460,84,0.6721,"[FIT] **Perfect Role Fit**: AI Engineer with 4.7y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+
+_**Score Breakdown:** Skills (0.46) | Exp (0.82) | Title (1.00) | Prod (0.08) | Behav (0.87)_"
+CAND_0053591,85,0.6721,"[FIT] **Perfect Role Fit**: AI Engineer with 5.3y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 90/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.31) | Exp (1.00) | Title (1.00) | Prod (0.30) | Behav (0.84)_"
+CAND_0061655,86,0.6708,"[FIT] **Perfect Role Fit**: Machine Learning Engineer with 4.6y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.42) | Exp (0.82) | Title (1.00) | Prod (0.20) | Behav (0.83)_"
+CAND_0096172,87,0.6704,"[FIT] **Perfect Role Fit**: NLP Engineer with 5.2y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.50) | Exp (1.00) | Title (1.00) | Prod (0.20) | Behav (0.77)_"
+CAND_0076904,88,0.6691,"[FIT] **Perfect Role Fit**: Senior Data Scientist with 4.2y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+
+_**Score Breakdown:** Skills (0.60) | Exp (0.82) | Title (1.00) | Prod (0.08) | Behav (0.78)_"
+CAND_0007009,89,0.6683,"[GAP] **Title Mismatch**: Current role 'Recommendation Systems Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.42) | Exp (1.00) | Title (0.40) | Prod (0.20) | Behav (0.79)_"
+CAND_0065878,90,0.6680,"[FIT] **Perfect Role Fit**: Senior Data Scientist with 7.8y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.35) | Exp (1.00) | Title (1.00) | Prod (0.33) | Behav (0.85)_"
+CAND_0037566,91,0.6675,"[FIT] **Perfect Role Fit**: Machine Learning Engineer with 6.9y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 82/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.30) | Exp (1.00) | Title (1.00) | Prod (0.30) | Behav (0.85)_"
+CAND_0039383,92,0.6673,"[FIT] **Perfect Role Fit**: Applied ML Engineer with 7.1y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.36) | Exp (1.00) | Title (1.00) | Prod (0.17) | Behav (0.85)_"
+CAND_0024620,93,0.6668,"[FIT] **Perfect Role Fit**: AI Engineer with 5.9y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.36) | Exp (1.00) | Title (1.00) | Prod (0.08) | Behav (0.87)_"
+CAND_0087630,94,0.6667,"[FIT] **Perfect Role Fit**: AI Engineer with 7.2y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.40) | Exp (1.00) | Title (1.00) | Prod (0.33) | Behav (0.75)_"
+CAND_0078002,95,0.6664,"[FIT] **Perfect Role Fit**: Machine Learning Engineer with 6.3y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.24) | Exp (1.00) | Title (1.00) | Prod (0.33) | Behav (0.85)_"
+CAND_0010257,96,0.6661,"[FIT] **Perfect Role Fit**: Senior Data Scientist with 6.5y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.36) | Exp (1.00) | Title (1.00) | Prod (0.33) | Behav (0.88)_"
+CAND_0079064,97,0.6657,"[FIT] **Perfect Role Fit**: Senior Data Scientist with 5.2y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+
+_**Score Breakdown:** Skills (0.42) | Exp (1.00) | Title (1.00) | Prod (0.30) | Behav (0.93)_"
+CAND_0077285,98,0.6654,"[GAP] **Title Mismatch**: Current role 'Recommendation Systems Engineer' diverges from the core ML/AI engineering focus.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.49) | Exp (1.00) | Title (0.40) | Prod (0.30) | Behav (0.84)_"
+CAND_0029367,99,0.6653,"[FIT] **Perfect Role Fit**: Senior Data Scientist with 5.7y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+[STRONG] **High Assessment**: Averaged 81/100 on Redrob tests.  
+
+_**Score Breakdown:** Skills (0.46) | Exp (1.00) | Title (1.00) | Prod (0.17) | Behav (0.79)_"
+CAND_0074735,100,0.6650,"[FIT] **Perfect Role Fit**: Applied ML Engineer with 5.5y experience closely matches the Senior AI Engineer requirement.  
+[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).  
+[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.  
+[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.  
+
+_**Score Breakdown:** Skills (0.41) | Exp (1.00) | Title (1.00) | Prod (0.17) | Behav (0.91)_"

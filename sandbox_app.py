@@ -134,7 +134,7 @@ with tab1:
                 })
 
             st.download_button(
-                label="⬇️ Download Full submission.csv (100 Candidates)",
+                label=f"⬇️ Download Full submission.csv ({len(rows)} Candidates)",
                 data=output.getvalue(),
                 file_name="submission.csv",
                 mime="text/csv",

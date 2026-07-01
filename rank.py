@@ -10,6 +10,8 @@ import numpy as np
 
 os.environ['USE_TF'] = '0'
 os.environ['USE_TORCH'] = '1'
+os.environ['HF_HUB_OFFLINE'] = '1'
+os.environ['TRANSFORMERS_OFFLINE'] = '1'
 
 from transformers import AutoTokenizer, AutoModel
 import torch
@@ -504,68 +506,64 @@ def compute_score(c, debug=False):
 # ── Reasoning Generator ───────────────────────────────────────────────────────
 
 def generate_reasoning(c, score, rank):
-    """Generate specific, factual, non-templated reasoning per spec Stage 4 requirements"""
+    """Generate specific, factual reasoning with a clear score breakdown for transparency."""
     p = c['profile']
-    sig = c['redrob_signals']
-    skills = [s['name'] for s in c.get('skills', [])
-              if s.get('proficiency') in ['advanced', 'intermediate']][:4]
+    sig = c.get('redrob_signals', {})
     
+    # Recompute base heuristic scores to show the breakdown
+    s_skill      = skill_score(c)
+    s_exp        = experience_score(c)
+    s_prod       = production_score(c)
+    s_behavioral = behavioral_score(c)
+    s_title      = title_relevance_score(c)
+    s_edu        = edu_tier_score(c)
+    
+    skills = [s['name'] for s in c.get('skills', []) if s.get('proficiency') in ['advanced', 'expert', 'intermediate']]
+    title = p.get('current_title', 'Unknown Role')
     yoe = p.get('years_of_experience', 0)
-    title = p.get('current_title', 'Unknown')
-    loc = p.get('location', 'Unknown')
     
-    # Build specific facts
-    facts = []
+    reasoning = []
     
-    # Title + experience
-    facts.append(f"{title} with {yoe:.1f}y experience")
-    
-    # Top skills
-    if skills:
-        facts.append(f"skills include {', '.join(skills[:3])}")
-    
-    # Activity signal
-    last_active = sig.get('last_active_date', '')
-    if last_active:
-        days = (datetime.now() - datetime.strptime(last_active, '%Y-%m-%d')).days
-        if days < 30:
-            facts.append("active in last 30 days")
-        elif days < 90:
-            facts.append(f"last active {days}d ago")
-        else:
-            facts.append(f"inactive for {days//30} months")
-    
-    # GitHub
-    gh = sig.get('github_activity_score', -1)
-    if gh > 5:
-        facts.append(f"GitHub score {gh:.1f}")
-    
-    # Location
-    loc_lower = loc.lower()
-    if any(city in loc_lower for city in TIER1_CITIES):
-        facts.append(f"based in {loc}")
-    elif sig.get('willing_to_relocate'):
-        facts.append("willing to relocate")
-    
-    # Concerns for lower ranks
-    concerns = []
+    # 1. Title & Experience (Target: 5-9 years Senior AI Engineer)
+    if s_title > 0.8 and s_exp > 0.8:
+        reasoning.append(f"[FIT] **Perfect Role Fit**: {title} with {yoe:.1f}y experience closely matches the Senior AI Engineer requirement.")
+    elif s_exp < 0.5:
+        reasoning.append(f"[GAP] **Experience Gap**: {yoe:.1f} years of experience falls outside the target 5-9 years band.")
+    elif s_title < 0.5:
+        reasoning.append(f"[GAP] **Title Mismatch**: Current role '{title}' diverges from the core ML/AI engineering focus.")
+    else:
+        reasoning.append(f"[FIT] **Solid Fit**: {title} with {yoe:.1f}y experience.")
+        
+    # 2. Tech Stack & Production (Target: Embeddings, RAG, Weaviate, Pinecone, Production)
+    if s_skill > 0.7:
+        reasoning.append(f"[FIT] **Strong Skill Match**: High overlap with required tech stack (e.g., {', '.join(skills[:3]) if skills else 'ML/AI'}).")
+    else:
+        reasoning.append(f"[GAP] **Skill Gap**: Lacks sufficient depth in core ranking/retrieval tech (Vector DBs, LLM fine-tuning).")
+        
+    if s_prod > 0.7:
+        reasoning.append(f"[FIT] **Production Ready**: Proven experience shipping real-world ML systems rather than pure research.")
+    elif s_prod < 0.3:
+        reasoning.append(f"[GAP] **Research Heavy**: Lacks signals of large-scale production deployment.")
+        
+    # 3. Behavioral & Redrob Signals
+    if s_edu > 0.5:
+        reasoning.append(f"[STRONG] **Top Tier Edu**: Graduated from a Tier-1 institution.")
+        
     assessments = sig.get('skill_assessment_scores', {})
     if assessments:
         avg_assess = sum(assessments.values()) / len(assessments)
-        if avg_assess < 45:
-            concerns.append(f"assessment scores low (avg {avg_assess:.0f}/100)")
+        if avg_assess > 80:
+            reasoning.append(f"[STRONG] **High Assessment**: Averaged {avg_assess:.0f}/100 on Redrob tests.")
+        elif avg_assess < 50:
+            reasoning.append(f"[GAP] **Low Assessment**: Averaged {avg_assess:.0f}/100 on Redrob tests.")
+            
+    # 4. Final Score Breakdown
+    reasoning.append(f"\n_**Score Breakdown:** Skills ({s_skill:.2f}) | Exp ({s_exp:.2f}) | Title ({s_title:.2f}) | Prod ({s_prod:.2f}) | Behav ({s_behavioral:.2f})_")
     
-    if sig.get('notice_period_days', 0) > 90:
-        concerns.append(f"notice period {sig['notice_period_days']}d")
-    
-    if not sig.get('open_to_work_flag'):
-        concerns.append("not marked open to work")
-    
-    reasoning = '; '.join(facts)
-    if concerns and rank > 20:
-        reasoning += '. Concern: ' + ', '.join(concerns)
-    
-    return reasoning
+    if is_honeypot(c):
+        reasoning = ["🚨 **HONEYPOT DETECTED**: Contradictory profile data. Automatically penalized to bottom rank."]
+        
+    return "  \n".join(reasoning)
 
 def load_expanded_keywords():
     """Load expanded JD keywords from file (if exists). Returns list of keywords or empty list."""

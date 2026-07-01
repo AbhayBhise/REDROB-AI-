@@ -1,4 +1,16 @@
 """
+================================================================================
+WARNING: EXPERIMENTAL FEATURE
+================================================================================
+This script is strictly experimental and NOT part of the official Stage 3 offline
+evaluation pipeline. 
+
+The primary Stage 3 ranking engine (rank.py) relies entirely on a fully 
+offline, deterministic heuristic reasoning module to generate justifications. 
+This file is kept only for archival and interactive demo purposes. 
+Do not use this for formal offline evaluation as it requires external API access.
+================================================================================
+
 LLM-Powered Reasoning Generation Module
 
 This module generates personalized, persuasive 2-sentence justifications for why 

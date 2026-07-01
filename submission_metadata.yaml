@@ -48,7 +48,7 @@ compute:
   uses_gpu_for_inference: false
   has_network_during_ranking: false
   pre_computation_required: true
-  pre_computation_time_minutes: 90   # One-time offline embedding generation
+  pre_computation_time_minutes: 10   # One-time offline embedding generation
 
 # ============================================================================
 # AI tools declaration
@@ -68,8 +68,8 @@ ai_usage_summary: |
 # ============================================================================
 methodology_summary: |
   Two-stage hybrid ranking pipeline for 100K candidates against a Senior AI
-  Engineer JD. Stage 1 (offline): BAAI/bge-small-en-v1.5 generates 384-dim
-  embeddings for all candidates and saves to disk (~90 min, done once).
+  Engineer JD. Stage 1 (offline): BAAI/bge-base-en-v1.5 generates 768-dim
+  embeddings for all candidates and saves to disk (~10 min, done once).
   Stage 2 (ranking, ~37s): Loads precomputed embeddings, embeds the JD once,
   computes BM25 over structured candidate text, runs a 9-component MasterScore
   (skill match, experience band, production evidence, behavioral signals,
