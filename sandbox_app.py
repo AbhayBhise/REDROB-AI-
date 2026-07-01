@@ -30,6 +30,21 @@ with tab1:
     col3.metric("LLM Reasoning", "GPT/Claude", "Deterministic Fallback")
 
     st.divider()
+    st.markdown("Upload a subset of the `candidates.jsonl` file to visualize how our hybrid ranking pipeline evaluates profiles.")
+
+    with st.expander("📄 View Target Job Description (Senior AI Engineer)", expanded=True):
+        st.markdown("""
+        **Role:** Senior AI Engineer (Founding Team)  
+        **Location:** Pune / Noida / Bangalore (Hybrid)  
+        **Experience Requirements:** 5 to 9 years  
+        
+        **Core Requirements:**
+        * Production experience with embeddings, retrieval, and ranking systems (`sentence-transformers`, BGE, E5).
+        * Hands-on vector database & hybrid search experience (Pinecone, Weaviate, Qdrant, Elasticsearch, FAISS).
+        * Evaluation frameworks (NDCG, MRR, MAP, offline/online A/B testing).
+        * LLM fine-tuning (LoRA, PEFT) and Learning-to-Rank algorithms (XGBoost).
+        * Experience shipping rankers and semantic search candidate matching for production users.
+        """)
 
     uploaded = st.file_uploader(
         "Upload candidates.jsonl (up to 100 candidates)",
@@ -85,10 +100,12 @@ with tab1:
             st.subheader("📊 Top Ranked Candidates")
             st.dataframe(
                 rows,
-                use_container_width=True,
+                use_container_width=False,
+                hide_index=True,
                 column_config={
                     "rank": st.column_config.NumberColumn("Rank", width="small"),
                     "score": st.column_config.NumberColumn("Score", format="%.4f"),
+                    "title": st.column_config.TextColumn("Current Title", width="medium"),
                     "reasoning": st.column_config.TextColumn("Reasoning", width="large"),
                 }
             )
