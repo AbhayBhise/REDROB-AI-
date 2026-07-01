@@ -33,20 +33,16 @@
                 A["100K Candidates (JSONL)"] --> B["Precompute Offline<br/>BAAI/bge-base (768-dim)"]
                 B --> C[("embeddings.npz<br/>(Compressed float16)")]
                 
-                D["Job Description"] --> E["LLM Expansion<br/>(Extract Synonyms)"]
-                
-                E --> G["Hybrid Retrieval Engine"]
+                D["Job Description"] --> G["Hybrid Retrieval Engine"]
                 C --> G
+                A --> G
                 
                 G -->|Dense + BM25 + Heuristics| H["Top 500 Candidates"]
                 
-                H --> I{"Cross-Encoder<br/>Available?"}
-                I -->|YES| J["ms-marco Re-ranking"]
-                I -->|NO| K["Baseline Hybrid Scores"]
+                H --> J["ms-marco Re-ranking<br/>(Cross-Encoder)"]
                 J --> L["Top 100 Selected"]
-                K --> L
                 
-                L --> M["LLM Reasoning Engine<br/>(Generates Justifications)"]
+                L --> M["Deterministic Heuristic Engine<br/>(Generates Offline Justifications)"]
                 M --> N["submission.csv<br/>(Final Output)"]
                 
                 style A fill:#c7d2fe,stroke:#4f46e5,stroke-width:2px
