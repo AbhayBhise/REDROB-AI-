@@ -35,16 +35,28 @@
   - resources/
 ```
 
----
+## ✅ **Pre-Submission Dry Run & Validation**
 
-## ✅ **Pre-Submission Dry Run**
+To ensure compliance with hackathon rules, test the system in both intended environments:
 
-### **Option A: Quick Test (Baseline Only)**
+### **Validation A: Offline Sandbox (Stage 3 Evaluation)**
+*Purpose: Prove the system functions flawlessly without internet or LLM keys.*
+1. Disconnect machine from the internet (or remove API keys from environment).
+2. Run baseline processing:
 ```bash
 python precompute.py
 python rank.py --candidates candidates.jsonl --out submission.csv
 ```
-⏱️ Time: ~50 seconds total
+✅ **Expected Result**: System gracefully falls back to local determinism, completes in ~50 seconds, and generates `submission.csv`.
+
+### **Validation B: Online Live Demo (Stage 1 & 2 Pitch)**
+*Purpose: Prove the interactive UI functions correctly for live demonstrations.*
+1. Ensure API keys are set for maximum reasoning capability.
+2. Launch the Streamlit server:
+```bash
+python -m streamlit run sandbox_app.py
+```
+✅ **Expected Result**: Web dashboard boots successfully and allows manual `.jsonl` sample testing with real-time reasoning.
 
 ### **Option B: Full Test (All 5 Upgrades)**
 ```bash

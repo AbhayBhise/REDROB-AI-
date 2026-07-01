@@ -153,6 +153,23 @@ graph LR
 
 ---
 
+## 🧪 **Testing Protocols (Offline Sandbox vs. Online Live Demo)**
+
+This system is designed to operate flawlessly in two distinct environments, satisfying both the Stage 3 Evaluation constraints and the Stage 2 Pitch requirements:
+
+### **1. Stage 3 Evaluation (100% Offline Sandbox Environment)**
+To evaluate the strict offline capability of the pipeline, evaluators should disconnect the host machine from the internet (air-gapped environment) and run the pipeline purely via terminal:
+*   The system detects the lack of LLM API keys or internet connection.
+*   It seamlessly falls back to local, pre-downloaded deterministic models (`BAAI/bge-base-en-v1.5` and `cross-encoder/ms-marco-MiniLM-L-6-v2`).
+*   No external API calls are made. 100,000 candidates are processed and ranked securely on-device.
+
+### **2. Stage 2 Pitch (Online Live Demo via Streamlit)**
+For interactive visual demonstrations during the pitch, we have provided a web-based UI (`sandbox_app.py`). 
+*   This UI allows judges to manually upload `jsonl` samples and see the AI generate reasoning in real-time. 
+*   It utilizes the exact same underlying logic, but wraps it in a visually engaging frontend.
+
+---
+
 ## 🚀 **How to Run**
 
 ### **Option 1: Baseline (Quick)**
