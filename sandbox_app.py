@@ -27,7 +27,7 @@ with tab1:
     col1, col2, col3 = st.columns(3)
     col1.metric("Embedding Model", "BAAI/bge-base-en", "768-dim")
     col2.metric("Cross-Encoder", "ms-marco-MiniLM", "Top 500")
-    col3.metric("LLM Reasoning", "GPT/Claude", "Deterministic Fallback")
+    col3.metric("Reasoning Engine", "Deterministic Logic", "MasterScore Explainability")
 
     st.divider()
     st.markdown("Upload a subset of the `candidates.jsonl` file to visualize how our hybrid ranking pipeline evaluates profiles.")
@@ -174,7 +174,7 @@ with tab2:
         J --> L["Top 100 Selected"]
         K --> L
         
-        L --> M["LLM Reasoning Engine"]
+        L --> M["Deterministic Heuristic Engine"]
         M --> N["submission.csv Final Output"]
         
         style A fill:#c7d2fe,stroke:#4f46e5,stroke-width:2px
@@ -198,11 +198,11 @@ with tab2:
     st.divider()
     st.subheader("🔄 5 Core Architectural Pillars")
     
-    st.info("📥 **1. Input & Expansion**\nThe Job Description is analyzed and dynamically expanded using an LLM to extract hidden skill requirements and synonyms.")
+    st.info("📥 **1. Input & Parsing**\nThe Job Description is analyzed to extract core skill requirements, experience bands, and disqualifiers.")
     st.success("🧠 **2. Offline Precomputation (BAAI/bge-base)**\n100,000 candidates are embedded into 768-dimensional float16 vectors. The database is compressed for ultra-fast in-memory retrieval.")
     st.warning("⚡ **3. Hybrid Retrieval Engine**\nCombines **BM25 Lexical Scoring** (Keyword overlap) with **Dense Semantic Scoring** (Cosine similarity). Fuses into a Master Score alongside deterministic heuristics (Experience, Location).")
     st.error("🎯 **4. Cross-Encoder Re-ranking (ms-marco)**\nThe top 500 candidates undergo a highly precise pairwise attention re-ranking to filter out false positives and honeypots.")
-    st.info("🤖 **5. LLM Reasoning Generation**\nThe final Top 100 candidates are passed to an LLM to generate natural language justifications explaining exactly *why* they are a fit.")
+    st.info("🤖 **5. Deterministic Reasoning Generation**\nThe final Top 100 candidates are passed through our heuristic engine to generate natural language justifications explaining exactly *why* they are a fit without hallucinations.")
 
 with tab3:
     st.header("📊 Model Specifications")
@@ -213,7 +213,7 @@ with tab3:
     | **Lexical Search** | `BM25 (rank_bm25)` | Exact keyword matching for strict requirements. |
     | **Re-Ranker** | `cross-encoder/ms-marco-MiniLM-L-6-v2` | High-accuracy pairwise scoring for the top candidates. |
     | **Learning-to-Rank** | `XGBoost` | ML model trained on 11 distinct profile features to weight the final score. |
-    | **Reasoning Engine** | `GPT / Claude` | Generates human-readable justifications for recruiters. |
+    | **Reasoning Engine** | `Deterministic Heuristics` | Generates human-readable justifications for recruiters. |
     """)
 
 with tab4:
