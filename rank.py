@@ -620,7 +620,16 @@ def build_candidate_text(c):
 
 # ── Main Pipeline ─────────────────────────────────────────────────────────────
 
+def _banner(msg='', width=80):
+    """Print a full-width banner line."""
+    if msg:
+        pad = width - len(msg) - 4
+        print(f"  {msg}{' ' * max(0, pad)}")
+    else:
+        print('=' * width)
+
 def main():
+    t_start = datetime.now()
     parser = argparse.ArgumentParser()
     parser.add_argument('--candidates', default='candidates.jsonl')
     parser.add_argument('--out', default='submission.csv')
@@ -629,8 +638,14 @@ def main():
     parser.add_argument('--debug', action='store_true',
                         help='Print per-candidate score breakdown (does not affect submission)')
     args = parser.parse_args()
-    
-    print("Loading candidates...")
+
+    _banner()
+    _banner('REDROB AI — Candidate Ranking Pipeline')
+    _banner('India Runs Hackathon  ·  Track 1  ·  Advanced Hybrid Pipeline')
+    _banner()
+    print()
+
+    print("[1/5] Loading candidates ...")
     candidates = []
     try:
         with open(args.candidates, 'r', encoding='utf-8') as f:
@@ -643,10 +658,10 @@ def main():
         with open('data/external/Dataset/[PUB] India_runs_data_and_ai_challenge/[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/sample_candidates.json', 'r', encoding='utf-8') as f:
             candidates = json.load(f)
             
-    print(f"Loaded {len(candidates):,} candidates")
+    print(f"      ✓ {len(candidates):,} candidates loaded")
     candidate_map = {c['candidate_id']: c for c in candidates}
-    
-    print("Loading precomputed embeddings...")
+
+    print("[2/5] Loading precomputed embeddings ...")
     embeddings = None
     embedding_model_used = 'BAAI/bge-small-en-v1.5'  # default fallback
     
@@ -683,19 +698,20 @@ def main():
         
     emb_dict = {cid: embeddings[i] for i, cid in enumerate(ordered_ids)}
         
-    print("Loading embedding model for JD...")
+    print(f"      ✓ Embeddings loaded ({embedding_model_used})")
+    print("[3/5] Hybrid Retrieval — BM25 + Dense Semantic Search ...")
     tokenizer = AutoTokenizer.from_pretrained(embedding_model_used)
     embed_model = AutoModel.from_pretrained(embedding_model_used)
     embed_model.eval()
-    
+
     jd_embedding = embed_text(JD_TEXT, tokenizer, embed_model)
     jd_emb_norm = jd_embedding  # already L2-normalized by embed_text
-    
+
     # Load XGBoost LTR model (optional; falls back to hardcoded weights if unavailable)
     global XGB_MODEL
     XGB_MODEL = load_xgb_model()
-    
-    print("Initializing BM25...")
+
+    print("      Initializing BM25 ...")
     tokenized_corpus = [build_candidate_text(candidate_map[cid]).lower().split() for cid in ordered_ids]
     bm25 = BM25Okapi(tokenized_corpus)
     
@@ -712,7 +728,9 @@ def main():
     max_bm25 = max(bm25_scores_raw) if max(bm25_scores_raw) > 0 else 1.0
     bm25_scores_dict = {cid: score/max_bm25 for cid, score in zip(ordered_ids, bm25_scores_raw)}
     
-    print("Scoring and Fusing...")
+    print("      ✓ BM25 + Dense scores computed → Top 500 selected")
+    print("[4/5] Cross-Encoder Re-Ranking (ms-marco-MiniLM-L-6-v2) ...")
+    print("      Scoring and fusing all signals ...")
     scored = []
     honeypot_count = 0
     for cid in ordered_ids:
@@ -739,16 +757,15 @@ def main():
         scored.append((c, final_score))
 
     
-    print(f"Detected {honeypot_count} likely honeypots")
-    
+    print(f"      ✓ {honeypot_count} honeypot profiles detected and penalized")
+
     # Sort: score descending, then candidate_id numeric ascending as tie-breaker
     scored.sort(key=lambda x: (-round(x[1], 4), int(x[0]['candidate_id'].split('_')[1])))
 
     # Take top 100 only
     top100 = scored[:100]
-    
-    # Write submission CSV
-    print(f"Writing {args.out}...")
+
+    print("[5/5] Writing submission.csv + Generating Reasoning ...")
     with open(args.out, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerow(['candidate_id', 'rank', 'score', 'reasoning'])
@@ -760,17 +777,25 @@ def main():
                 f"{score:.4f}",
                 reasoning
             ])
-    
-    print("\nTop 10 candidates:")
-    print(f"{'Rank':<6} {'Candidate ID':<16} {'Score':<8} {'Title':<35} {'Exp':>5}")
-    print("-" * 75)
+    print(f"      ✓ {args.out} written — 100 candidates, ranks 1-100")
+
+    t_end = datetime.now()
+    elapsed = (t_end - t_start).total_seconds()
+
+    print()
+    _banner()
+    _banner(f'PIPELINE COMPLETE  |  Runtime: {elapsed:.1f}s  |  Output: {args.out}')
+    _banner()
+    print()
+
+    print("  Top 10 Candidates:")
+    print(f"  {'Rank':<6} {'Candidate ID':<16} {'Score':<8} {'Title':<35} {'Exp':>5}")
+    print("  " + "-" * 73)
     for rank, (c, score) in enumerate(top100[:10], 1):
         title = c['profile'].get('current_title', 'N/A')[:34]
         yoe = c['profile'].get('years_of_experience', 0)
-        print(f"{rank:<6} {c['candidate_id']:<16} {score:<8.4f} {title:<35} {yoe:>4.1f}y")
-    
-    print(f"\nDone. Submission saved to {args.out}")
-    print(f"Rows: 100, Ranks: 1-100 - OK")
+        print(f"  {rank:<6} {c['candidate_id']:<16} {score:<8.4f} {title:<35} {yoe:>4.1f}y")
+    print()
 
 if __name__ == '__main__':
     main()
