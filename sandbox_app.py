@@ -33,15 +33,18 @@ with tab1:
 
     uploaded = st.file_uploader(
         "Upload candidates.jsonl (up to 100 candidates)",
-        type=['jsonl', 'json'],
+        type=['jsonl', 'json', 'csv'],
         help="Each line should be a valid JSON candidate object matching the hackathon schema."
     )
 
     if uploaded:
-        candidates = []
-        content = uploaded.read().decode('utf-8')
-        for line in content.splitlines():
-            line = line.strip()
+        if uploaded.name.lower().endswith('.csv'):
+            st.error("❌ Invalid file format. Please upload the raw `candidates.jsonl` file, not a `.csv` file. You can clear this file by clicking the 'X' on the right.")
+        else:
+            candidates = []
+            content = uploaded.read().decode('utf-8')
+            for line in content.splitlines():
+                line = line.strip()
             if line:
                 try:
                     candidates.append(json.loads(line))
