@@ -158,21 +158,6 @@ graph LR
 The system architecture is designed to support both secure, air-gapped terminal execution and interactive web-based deployments.
 
 ### **1. Secure Air-Gapped Execution (Offline Mode)**
-    A --> G
-    
-    G --> H["Top N Candidates"]
-    
-    H --> I["Cross-Encoder<br/>Re-Ranking"]
-    H --> J["MasterScore Heuristics<br/>(Edu, Title, Location)"]
-    
-    I --> K["Learning-To-Rank<br/>XGBoost Fusion"]
-    J --> K
-    
-    K --> L["Advanced Deterministic<br/>Reasoning Generation"]
-    
-    L --> M["Output: submission.csv"]
-    end
-```
 
 ---
 
