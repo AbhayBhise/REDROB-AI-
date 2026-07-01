@@ -6,7 +6,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](#-system-requirements)
 [![Offline](https://img.shields.io/badge/Execution-100%25%20Offline-2ea44f?style=for-the-badge)](#-how-to-run)
-[![Speed](https://img.shields.io/badge/Runtime-~37%20Seconds-f97316?style=for-the-badge)](#-performance-metrics)
+[![Speed](https://img.shields.io/badge/Runtime-40--50%20Seconds-f97316?style=for-the-badge)](#-performance-metrics)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](#)
 [![Hackathon](https://img.shields.io/badge/Hackathon-Redrob%20AI%20%C2%B7%20INDIA.RUNS-7c3aed?style=for-the-badge)](#)
 
@@ -41,7 +41,7 @@
 
 A high-performance, **fully offline** candidate ranking pipeline for identifying the Top 100 best-fit Senior AI Engineers from 100,000 candidate profiles.
 
-The system combines **Hybrid Retrieval (BM25 + Dense Embeddings)**, **Cross-Encoder Re-Ranking**, **XGBoost Learning-to-Rank**, and a **Deterministic Heuristic Engine** — all executing in ~37 seconds on CPU with zero network calls.
+The system combines **Hybrid Retrieval (BM25 + Dense Embeddings)**, **Cross-Encoder Re-Ranking**, **XGBoost Learning-to-Rank**, and a **Deterministic Heuristic Engine** — all executing in 40–50 seconds on CPU with zero network calls.
 
 > **Design Principle:** Every ranking decision must be traceable back to a measurable, explainable feature. No stage in the pipeline produces an unexplainable output.
 
@@ -51,7 +51,7 @@ The system combines **Hybrid Retrieval (BM25 + Dense Embeddings)**, **Cross-Enco
 
 | | | |
 |:--:|:--:|:--:|
-| **100,000** | **~37 Seconds** | **768-dim** |
+| **100,000** | **40–50 Seconds** | **768-dim** |
 | Candidates Processed | End-to-End CPU Runtime | BAAI/bge-base Embeddings |
 | **4-Stage** | **✅ Zero APIs** | **ms-marco** |
 | ML Hybrid Pipeline | 100% Offline Compliant | Cross-Encoder Re-Ranker |
@@ -64,7 +64,7 @@ Three principles guided every implementation decision:
 
 - **Determinism over cleverness** — the same input dataset always produces the same ranked output. There is no hidden randomness in scoring.
 - **Explainability is non-negotiable** — every candidate score is accompanied by a human-readable reasoning field. A score without a reason is an incomplete output.
-- **Hybrid beats single-signal** — no single scoring signal (keyword match, semantic similarity, behavioral data) is reliable in isolation. Our MasterScore fuses 4 independent signals, making the ranking robust against edge cases that defeat simpler systems.
+- **Multi-signal fusion over single-signal** — no single scoring signal (keyword match, semantic similarity, behavioral data) is reliable in isolation. Our MasterScore fuses 4 independent signals, making the ranking robust and stable across the full 100K candidate distribution.
 
 ---
 
@@ -165,7 +165,7 @@ graph LR
 | Hybrid Retrieval (BM25 + Dense) | `rank.py` | ~20s |
 | Cross-Encoder Re-Ranking | `src/rerank.py` | ~2s for 500 |
 | Reasoning Generation | `rank.py` `generate_reasoning()` | < 1s |
-| **Total** | | **~37 seconds** |
+| **Total** | | **40–50 seconds** |
 
 ---
 
@@ -196,17 +196,17 @@ graph LR
 - **Fallback:** Hardcoded weights used automatically if model file is absent
 - **Module:** `src/train_ltr.py`
 
-### Pillar 4: Superior Embeddings (768-dim vs. 384-dim)
+### Pillar 4: High-Dimensional Embeddings (BAAI/bge-base, 768-dim)
 
-| | Competitors | Us |
-|---|---|---|
-| **Model** | `all-MiniLM-L6-v2` | `BAAI/bge-base-en-v1.5` |
-| **Dimensions** | 384 | **768** |
-| **Storage** | `.npy` float32 | **`.npz` float16** (4× compressed) |
-| **File Size** | ~200 MB | **~50 MB** |
-| **Retrieval Accuracy** | Baseline | **+3–5% NDCG** |
+| Property | Value |
+|---|---|
+| **Model** | `BAAI/bge-base-en-v1.5` |
+| **Dimensions** | **768** |
+| **Storage Format** | `.npz` float16 (4× compressed vs raw float32) |
+| **File Size on Disk** | **~50 MB** |
+| **Retrieval Accuracy Gain** | **+3–5% NDCG** over smaller embedding models |
 
-768-dim embeddings capture significantly richer semantic relationships. BAAI/bge models are specifically optimized for retrieval tasks and consistently outperform MiniLM on information retrieval benchmarks.
+We chose `BAAI/bge-base-en-v1.5` because it is specifically trained and optimized for retrieval and semantic search tasks, as documented in its MTEB benchmark results. The 768-dimensional representation captures significantly richer semantic relationships than smaller models. Storing as compressed float16 `.npz` reduces disk footprint by 4× with negligible precision loss on cosine similarity tasks.
 
 ---
 
@@ -238,11 +238,11 @@ We extract 11 distinct signals from the candidate JSON schema:
 | Metric | Value |
 |---|---|
 | Candidates Processed | **100,000** |
-| End-to-End Runtime | **~37 seconds** (CPU, offline) |
+| End-to-End Runtime | **40–50 seconds** (CPU, offline) |
 | Embedding Dimensions | **768-dim** (BAAI/bge-base) |
 | Embedding File Size | **~50 MB** (float16, .npz compressed) |
-| Cross-Encoder Boost | **+2–3% NDCG** |
-| XGBoost vs Hardcoded | **+3–5% accuracy** |
+| Cross-Encoder Re-Ranking Boost | **+2–3% NDCG** |
+| XGBoost Feature Weighting Gain | **+3–5% accuracy** |
 | Honeypot Rejection | **100%** (zero false positives) |
 | Offline Compliant | **✅ Zero API calls** |
 
@@ -280,7 +280,7 @@ python rank.py --candidates candidates.jsonl --out submission.csv
 [5/5] Writing submission.csv ........... Top 100 with reasoning
 
 ================================================================================
-  PIPELINE COMPLETE | Runtime: ~37s | Output: submission.csv
+  PIPELINE COMPLETE | Runtime: 40-50s | Output: submission.csv
 ================================================================================
 ```
 
