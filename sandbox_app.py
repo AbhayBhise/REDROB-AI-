@@ -97,7 +97,7 @@ with tab1:
                     'reasoning': reasoning
                 })
 
-            st.subheader("📊 Top Ranked Candidates")
+            st.subheader("📊 Top Ranked Candidates (Overview)")
             st.dataframe(
                 rows,
                 use_container_width=False,
@@ -106,9 +106,20 @@ with tab1:
                     "rank": st.column_config.NumberColumn("Rank", width="small"),
                     "score": st.column_config.NumberColumn("Score", format="%.4f"),
                     "title": st.column_config.TextColumn("Current Title", width="medium"),
-                    "reasoning": st.column_config.TextColumn("Reasoning", width="large"),
+                    "reasoning": st.column_config.TextColumn("Reasoning (Preview)", width="large"),
                 }
             )
+
+            st.divider()
+            st.subheader("🏆 Top 10 Candidate Deep-Dive")
+            st.markdown("Detailed AI reasoning for the absolute best matches.")
+            
+            for r in rows[:10]:
+                with st.expander(f"🏅 Rank {r['rank']} | {r['candidate_id']} | {r['title']} (Score: {r['score']})", expanded=(r['rank'] == 1)):
+                    st.markdown(f"**Experience:** {r['experience']} &nbsp;&nbsp;|&nbsp;&nbsp; **Location:** {r['location']}")
+                    st.markdown(f"**AI Reasoning:**\n\n> {r['reasoning']}")
+
+            st.divider()
 
             # Download button
             output = io.StringIO()
@@ -123,10 +134,11 @@ with tab1:
                 })
 
             st.download_button(
-                label="⬇️ Download submission.csv",
+                label="⬇️ Download Full submission.csv (100 Candidates)",
                 data=output.getvalue(),
                 file_name="submission.csv",
-                mime="text/csv"
+                mime="text/csv",
+                type="primary"
             )
     else:
         st.markdown("""
