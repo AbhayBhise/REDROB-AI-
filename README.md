@@ -102,7 +102,7 @@ REDROB-AI-/
 ```mermaid
 graph TD
     A["100K Candidates"] --> B["Precompute: bge-base<br/>768-dim embeddings"]
-    B --> C["candidates_embeddings.npz<br/>(compressed, ~50MB)"]
+    B --> C["candidates_embeddings.npz<br/>(compressed, ~75MB)"]
     
     D["Job Description"] --> E["Optional: Expand JD<br/>via LLM"]
     E --> F["Expanded Keywords<br/>(JSON)"]
