@@ -4,7 +4,7 @@
 # ============================================================================
 # Team identity 
 # ============================================================================
-team_name: "TrueFit"   
+team_name: "DeepSight"   
 
 primary_contact:
   name: "Abhay Bhise"          
@@ -32,7 +32,7 @@ team_members:
 # ============================================================================
 github_repo: "https://github.com/AbhayBhise/REDROB-AI-.git" 
 
-sandbox_link: "https://redrob-truefit.streamlit.app/"              
+sandbox_link: "https://redrob-deepsight.streamlit.app/"              
 
 reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
 
