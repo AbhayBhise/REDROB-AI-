@@ -42,6 +42,7 @@
 Redrob AI is a high-performance, fully offline candidate-ranking pipeline for identifying the Top 100 best-fit Senior AI Engineers from 100,000 candidate profiles.
 
 The system combines hybrid retrieval (BM25 + dense embeddings), cross-encoder re-ranking, XGBoost learning-to-rank, and a deterministic heuristic engine. It runs in 40–50 seconds on CPU with zero network calls.
+The pipeline is designed with a modular architecture, enabling each ranking component to operate independently while contributing to a unified and explainable scoring framework. This design improves maintainability, scalability, and allows individual modules to be enhanced without affecting the overall ranking workflow.
 
 > **Design Principle:** Every ranking decision must be traceable to a measurable, explainable feature. No stage in the pipeline produces an unexplainable output.
 
