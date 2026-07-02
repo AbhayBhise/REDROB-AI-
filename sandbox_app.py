@@ -76,17 +76,38 @@ with tab1:
         if st.button("🚀 Run Advanced Ranking Pipeline", type="primary"):
             with st.spinner(f"Scoring {len(candidates)} candidates... Running Hybrid Retrieval & LLM Generation..."):
                 scored = []
+                honeypots = []
                 for c in candidates:
                     s = compute_score(c)
+                    if s <= 0.001:
+                        honeypots.append(c['candidate_id'])
                     scored.append((c, s))
-                scored.sort(key=lambda x: (-x[1], x[0]['candidate_id']))
+                
+                # Tie conflict resolution: Sort by score descending, then candidate ID ascending
+                scored.sort(key=lambda x: (-round(x[1], 4), int(x[0]['candidate_id'].split('_')[1])))
 
             st.success(f"✅ Successfully ranked {len(scored)} candidates!")
+            
+            if honeypots:
+                st.warning(f"🚨 **Honeypots Detected:** Identified {len(honeypots)} profiles with impossible timelines. They have been penalized to the bottom.")
 
             rows = []
+            prev_score = None
             for rank, (c, score) in enumerate(scored[:100], 1):
                 p = c.get('profile', {})
                 reasoning = generate_reasoning(c, score, rank)
+                
+                # Check for tie conflict
+                is_tie = False
+                if prev_score is not None and round(score, 4) == round(prev_score, 4):
+                    is_tie = True
+                prev_score = score
+
+                if c['candidate_id'] in honeypots:
+                    reasoning = "[HONEYPOT PENALTY] " + reasoning
+                if is_tie:
+                    reasoning = "[TIE RESOLVED BY ID] " + reasoning
+
                 rows.append({
                     'rank': rank,
                     'candidate_id': c['candidate_id'],
