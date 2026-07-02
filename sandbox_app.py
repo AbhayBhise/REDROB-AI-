@@ -8,7 +8,20 @@ import json, csv, io, os, sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from rank import compute_score, generate_reasoning
+from rank import compute_score, generate_reasoning, build_candidate_text, embed_text, JD_TEXT, load_expanded_keywords
+import numpy as np
+from rank_bm25 import BM25Okapi
+from transformers import AutoTokenizer, AutoModel
+import torch
+
+@st.cache_resource
+def load_ml_models():
+    embedding_model = 'BAAI/bge-base-en-v1.5'
+    tokenizer = AutoTokenizer.from_pretrained(embedding_model)
+    model = AutoModel.from_pretrained(embedding_model)
+    model.eval()
+    jd_embedding = embed_text(JD_TEXT, tokenizer, model)
+    return tokenizer, model, jd_embedding
 
 st.set_page_config(
     page_title="Redrob AI — Candidate Ranking",
@@ -74,14 +87,45 @@ with tab1:
             candidates = candidates[:100]
 
         if st.button("🚀 Run Advanced Ranking Pipeline", type="primary"):
-            with st.spinner(f"Scoring {len(candidates)} candidates... Running Hybrid Retrieval & LLM Generation..."):
+            with st.spinner(f"Scoring {len(candidates)} candidates... Running Hybrid Retrieval (BM25 + Semantic) & MasterScore..."):
+                tokenizer, embed_model, jd_emb_norm = load_ml_models()
+                
+                # 1. Initialize BM25 on the uploaded subset
+                tokenized_corpus = [build_candidate_text(c).lower().split() for c in candidates]
+                bm25 = BM25Okapi(tokenized_corpus)
+                
+                tokenized_jd = JD_TEXT.lower().split()
+                expanded_keywords = load_expanded_keywords()
+                if expanded_keywords:
+                    tokenized_jd.extend(expanded_keywords * 2)
+                
+                bm25_scores_raw = bm25.get_scores(tokenized_jd)
+                max_bm25 = max(bm25_scores_raw) if max(bm25_scores_raw) > 0 else 1.0
+                
                 scored = []
                 honeypots = []
-                for c in candidates:
-                    s = compute_score(c)
-                    if s <= 0.001:
+                for i, c in enumerate(candidates):
+                    # MasterScore
+                    master_score = compute_score(c)
+                    
+                    if master_score <= 0.001:
                         honeypots.append(c['candidate_id'])
-                    scored.append((c, s))
+                        final_score = 0.001
+                    else:
+                        # Semantic Dense Score
+                        c_text = build_candidate_text(c)
+                        c_emb = embed_text(c_text, tokenizer, embed_model)
+                        c_emb_norm = c_emb / np.linalg.norm(c_emb)
+                        semantic_score = float(np.dot(jd_emb_norm, c_emb_norm))
+                        semantic_score = max(0.0, min(1.0, semantic_score))
+                        
+                        # BM25 Score
+                        bm25_score = bm25_scores_raw[i] / max_bm25
+                        
+                        # Hybrid Fusion
+                        final_score = 0.40 * semantic_score + 0.25 * bm25_score + 0.35 * master_score
+
+                    scored.append((c, final_score))
                 
                 # Tie conflict resolution: Sort by score descending, then candidate ID ascending
                 scored.sort(key=lambda x: (-round(x[1], 4), int(x[0]['candidate_id'].split('_')[1])))
