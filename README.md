@@ -29,7 +29,7 @@
 - [The 4 Pillars](#-the-4-pillars)
 - [Feature Engineering Deep Dive](#-feature-engineering-deep-dive)
 - [Performance Metrics](#-performance-metrics)
-- [How to Run](#-how-to-run)
+- [How to Run](#-how-to-run-stage-3-evaluation)
 - [Output Format](#-output-format)
 - [System Requirements](#-system-requirements)
 - [Troubleshooting](#-troubleshooting)
@@ -39,11 +39,11 @@
 
 ## 📖 Overview
 
-A high-performance, **fully offline** candidate ranking pipeline for identifying the Top 100 best-fit Senior AI Engineers from 100,000 candidate profiles.
+Redrob AI is a high-performance, fully offline candidate-ranking pipeline for identifying the Top 100 best-fit Senior AI Engineers from 100,000 candidate profiles.
 
-The system combines **Hybrid Retrieval (BM25 + Dense Embeddings)**, **Cross-Encoder Re-Ranking**, **XGBoost Learning-to-Rank**, and a **Deterministic Heuristic Engine** — all executing in 40–50 seconds on CPU with zero network calls.
+The system combines hybrid retrieval (BM25 + dense embeddings), cross-encoder re-ranking, XGBoost learning-to-rank, and a deterministic heuristic engine. It runs in 40–50 seconds on CPU with zero network calls.
 
-> **Design Principle:** Every ranking decision must be traceable back to a measurable, explainable feature. No stage in the pipeline produces an unexplainable output.
+> **Design Principle:** Every ranking decision must be traceable to a measurable, explainable feature. No stage in the pipeline produces an unexplainable output.
 
 ---
 
@@ -52,9 +52,9 @@ The system combines **Hybrid Retrieval (BM25 + Dense Embeddings)**, **Cross-Enco
 | | | |
 |:--:|:--:|:--:|
 | **100,000** | **40–50 Seconds** | **768-dim** |
-| Candidates Processed | End-to-End CPU Runtime | BAAI/bge-base Embeddings |
+| Candidates processed | End-to-end CPU runtime | BAAI/bge-base embeddings |
 | **4-Stage** | **✅ Zero APIs** | **ms-marco** |
-| ML Hybrid Pipeline | 100% Offline Compliant | Cross-Encoder Re-Ranker |
+| ML hybrid pipeline | 100% offline compliant | Cross-encoder re-ranker |
 
 ---
 
@@ -63,8 +63,8 @@ The system combines **Hybrid Retrieval (BM25 + Dense Embeddings)**, **Cross-Enco
 Three principles guided every implementation decision:
 
 - **Determinism over cleverness** — the same input dataset always produces the same ranked output. There is no hidden randomness in scoring.
-- **Explainability is non-negotiable** — every candidate score is accompanied by a human-readable reasoning field. A score without a reason is an incomplete output.
-- **Multi-signal fusion over single-signal** — no single scoring signal (keyword match, semantic similarity, behavioral data) is reliable in isolation. Our MasterScore fuses 4 independent signals, making the ranking robust and stable across the full 100K candidate distribution.
+- **Explainability is non-negotiable** — every candidate score is accompanied by a human-readable reasoning field. A score without a reason is incomplete.
+- **Multi-signal fusion over single-signal** — no single scoring signal, such as keyword match, semantic similarity, or behavioral data, is reliable in isolation. MasterScore fuses four independent signals, making the ranking robust and stable across the full 100K candidate distribution.
 
 ---
 
@@ -122,16 +122,16 @@ graph LR
     A["Extract 11 Features"] --> B{"XGBoost<br/>Model<br/>Found?"}
     B -->|YES| C["ML-Learned Weights<br/>predict_proba"]
     B -->|NO| D["Hardcoded Weights<br/>0.25*skill + ..."]
-    
+
     C --> E["MasterScore"]
     D --> E
-    
+
     E --> F["Dense Score<br/>Cosine Sim"]
     E --> G["BM25 Score"]
-    
+
     F --> H["Fuse:<br/>0.4*Master<br/>+ 0.35*Dense<br/>+ 0.25*BM25"]
     G --> H
-    
+
     H --> I["Hybrid Rank Score"]
     I --> J["Top 500 → Cross-Encoder → Top 100"]
 ```
@@ -174,8 +174,8 @@ graph LR
 ### Pillar 1: Cross-Encoder Re-Ranking
 
 - **Model:** `cross-encoder/ms-marco-MiniLM-L-6-v2` (90M params)
-- **What:** Re-scores top 500 candidates with pairwise (JD, Candidate) joint attention evaluation
-- **Why:** Bi-Encoders suffer from "compression loss" — they encode JD and candidate independently. A Cross-Encoder reads both together, catching nuanced relevance signals that bi-encoders miss.
+- **What:** Re-scores the top 500 candidates with pairwise (JD, Candidate) joint-attention evaluation.
+- **Why:** Bi-encoders suffer from compression loss because they encode the JD and candidate independently. A cross-encoder reads both together, catching nuanced relevance signals that bi-encoders miss.
 - **Impact:** +2–3% NDCG over dense-only retrieval
 - **Speed:** < 2 seconds for 500 candidates on CPU
 - **Module:** `src/rerank.py`
@@ -183,9 +183,9 @@ graph LR
 ### Pillar 2: Deterministic Heuristic Reasoning Engine
 
 - **What:** Automatically generates personalized, human-readable professional justifications for every Top 100 candidate.
-- **Why:** Fully deterministic and offline. Every claim in the reasoning is directly derived from parsed candidate metadata — no hallucination risk, no API dependency.
+- **Why:** Fully deterministic and offline. Every claim in the reasoning is derived directly from parsed candidate metadata, with no hallucination risk and no API dependency.
 - **Format:** `[FIT]`, `[GAP]`, `[STRONG]` markers for rapid recruiter readability.
-- **Impact:** Judges can verify *exactly* why any candidate ranked where they did.
+- **Impact:** Judges can verify exactly why any candidate ranked where they did.
 
 ### Pillar 3: Learning-to-Rank (XGBoost)
 
@@ -193,7 +193,7 @@ graph LR
 - **What:** Learns optimal feature weights from labeled training data instead of relying on hand-tuned constants.
 - **Features:** `skill`, `experience`, `production_evidence`, `behavioral`, `location`, `title`, `assessment`, `education`, `certification`, `notice_period`, `consulting_penalty`
 - **Impact:** +3–5% accuracy over hardcoded weights
-- **Fallback:** Hardcoded weights used automatically if model file is absent
+- **Fallback:** Hardcoded weights are used automatically if the model file is absent
 - **Module:** `src/train_ltr.py`
 
 ### Pillar 4: High-Dimensional Embeddings (BAAI/bge-base, 768-dim)
@@ -206,7 +206,7 @@ graph LR
 | **File Size on Disk** | **~50 MB** |
 | **Retrieval Accuracy Gain** | **+3–5% NDCG** over smaller embedding models |
 
-We chose `BAAI/bge-base-en-v1.5` because it is specifically trained and optimized for retrieval and semantic search tasks, as documented in its MTEB benchmark results. The 768-dimensional representation captures significantly richer semantic relationships than smaller models. Storing as compressed float16 `.npz` reduces disk footprint by 4× with negligible precision loss on cosine similarity tasks.
+We chose `BAAI/bge-base-en-v1.5` because it is specifically trained and optimized for retrieval and semantic search tasks, as documented in its MTEB benchmark results. The 768-dimensional representation captures richer semantic relationships than smaller models. Storing the embeddings as compressed float16 `.npz` reduces disk footprint by 4× with negligible precision loss on cosine similarity tasks.
 
 ---
 
@@ -216,20 +216,20 @@ We extract 11 distinct signals from the candidate JSON schema:
 
 | # | Feature | Weight | Description |
 |---|---|---|---|
-| 1 | **Skill Match** | 25% | Weighted keyword overlap with JD must-haves. Expert skills get 2× weight, advanced 1.5×. |
-| 2 | **Experience** | 16% | Strictly favors 5–9 year range. Penalizes <3 years and management-track >13 years. |
+| 1 | **Skill Match** | 25% | Weighted keyword overlap with JD must-haves. Expert skills get 2× weight, advanced skills get 1.5×. |
+| 2 | **Experience** | 16% | Strictly favors the 5–9 year range. Penalizes <3 years and management-track >13 years. |
 | 3 | **Production Evidence** | 16% | Searches career history for *deployed, scale, production, inference*. Penalizes pure research (arxiv, lab, PhD). |
 | 4 | **Behavioral Signals** | 13% | 10 platform engagement signals from `redrob_signals` (response rate, recency, notice period). |
-| 5 | **Title Relevance** | 11% | Alignment of current title and headline with target Senior AI Engineer role. |
+| 5 | **Title Relevance** | 11% | Alignment of the current title and headline with the target Senior AI Engineer role. |
 | 6 | **Location** | 8% | Pune/Noida/Bangalore → 1.0. India with relocation willingness → 0.75. |
 | 7 | **Education Tier** | 5% | Institution tier mapping. Tier-1 IIT/IISc bonus applied. |
 | 8 | **Certifications** | 4% | Bonus for JD-relevant certifications (cloud ML, HF, TF). |
-| 9 | **Notice Period** | 2% | Rewards immediate joiners and < 30-day notice. |
+| 9 | **Notice Period** | 2% | Rewards immediate joiners and candidates with less than 30-day notice. |
 
 ### Structural Multipliers and Penalties
 
 - **Honeypot Filter:** Detects synthetic "trap" profiles by comparing claimed skill duration against total years of experience. Profiles with chronologically impossible timelines are assigned `score = 0.001` and sink to the bottom.
-- **Consulting Penalty:** Candidates with 100% service/consulting career history (TCS, Infosys, Wipro, Accenture) receive `−0.15` penalty to match the JD's preference for product/startup environments.
+- **Consulting Penalty:** Candidates with 100% service/consulting career history (TCS, Infosys, Wipro, Accenture) receive a `−0.15` penalty to match the JD's preference for product/startup environments.
 
 ---
 
@@ -369,10 +369,10 @@ CAND_0000002,2,0.9723,"[STRONG] Top Tier Edu + deep LLM fine-tuning (LoRA/PEFT).
 A: Run `python scripts/download_models.py` while connected before going offline.
 
 **Q: XGBoost model not found**  
-A: This is expected if you haven't trained the LTR model. The pipeline automatically falls back to hardcoded weights with no loss of correctness.
+A: This is expected if you have not trained the LTR model. The pipeline automatically falls back to hardcoded weights with no loss of correctness.
 
 **Q: Out of memory**  
-A: The pipeline runs comfortably on 8 GB RAM. The `.npz` float16 embeddings are ~50 MB. Close background applications if needed.
+A: The pipeline runs comfortably on 8 GB RAM. The `.npz` float16 embeddings are about 50 MB. Close background applications if needed.
 
 ---
 
